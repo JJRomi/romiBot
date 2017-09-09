@@ -9,7 +9,6 @@ import nltk
 from flask.ext.restful import Api, Resource, reqparse, fields, marshal
 
 app = Flask(__name__)
-
 SLACK_BOT_UESR_TOKEN = os.environ.get('SLACK_BOT_USER_TOKEN')
 SLACK_AUTH_TOKEN = os.environ.get('SLACK_AUTH_TOKEN')
 
@@ -17,42 +16,84 @@ SLACK_CLIENT_ID = os.environ.get('SLACK_CLIENT_ID')
 SLACK_CLIENT_SECRET =  os.environ.get('SLACK_CLIENT_SECRET')
 SLACK_VERIFICATION_TOKEN = os.environ.get('SLACK_VERIFICATION_TOKEN')
 
-slack_client = SlackClient(SLACK_BOT_UESR_TOKEN)
 
-# SLACK_WEBHOOK_SECRET = os.environ.get('SLACK_WEBHOOK_SECRET')
-# SLACK_TOKEN = os.environ.get('SLACK_TOKEN', None)
-# FORECAST_TOKEN = os.environ.get('FORECAST_TOKEN')
+class slackBot:
+    def __init__(self):
+        self.text = "안녕하세요!"
+        self.channel_id = ""
+        self.message = {}
+        self.user_name = "Romi"
+        self.user_emoji = ":monkey_face:"
+        self.verification = SLACK_VERIFICATION_TOKEN
+        self.slack_client = SlackClient(SLACK_BOT_UESR_TOKEN)
+        self.code = ""
+
+    def send_message(self):
+        try:
+            self.slack_client.api_call(
+                "chat.postMessage",
+                channel=self.channel_id,
+                attachments=self.message,
+                username=self.user_name,
+                icon_emoji=self.user_emoji
+            )
+        except BaseException as ex:
+            print("send_message (error) : ", ex)
+            return 500
+
+        print("\send message : ", self.message)
+
+        return 200
+
+    def oauth(self):
+        self.slack_client.api_call(
+            "oauth.access",
+            client_id=SLACK_CLIENT_ID,
+            client_secret=SLACK_CLIENT_SECRET,
+            code=self.code
+        )
+
+
+class callAPI:
+    def __init__(self):
+        self.url = ""
+        self.params = {}
+
+    def send_api(self):
+        try:
+            response = requests.get(self.url, params=self.params)
+        except BaseException as ex:
+            print("\n send api error : ", ex, "\n")
+
+        return response
 
 
 # test url
 @app.route('/test', methods=['POST'])
 def test():
-    text = request.form.get('text')
-    channel_id = request.form.get('channel_id')
+    slack_bot = slackBot()
+    slack_bot.text = request.form.get('text')
+    slack_bot.channel_id = request.form.get('channel_id')
     type_code = request.form.get('type_code')
 
-    keywords = extra_keyword(text)
-    message = tour_api(keywords, type_code)
+    keywords = extra_keyword(slack_bot.text)
+    slack_bot.message = tour_api(keywords, type_code)
 
-    try:
-        send_message(channel_id, message)
-    except BaseException as ex:
-        print("send_message (error) : ", ex)
+    response = slack_bot.send_message()
 
-    return Response(), 200
-
+    return Response(), response
 
 
 # button select message (type select)
 @app.route('/webhook', methods=['POST'])
 def btn_select():
-    text = request.form.get('text')
-    channel_id = request.form.get('channel_id')
+    slack_bot = slackBot()
+    slack_bot.text = request.form.get('text')
+    slack_bot.channel_id = request.form.get('channel_id')
 
     # text로 keyword 추출
-    keywords = extra_keyword(text)
-
-    attachments = [
+    keywords = extra_keyword(slack_bot.text)
+    slack_bot.message = [
         {
             "text": keywords[0] + keywords[1] + " 찾고 계신가요??",
             "fallback": "",
@@ -77,12 +118,9 @@ def btn_select():
         }
     ]
 
-    try:
-        send_message(channel_id, attachments)
-    except BaseException as ex:
-        print("send_message (error) : ", ex)
+    response = slack_bot.send_message()
 
-    return Response(), 200
+    return Response(), response
 
 
 @app.route('/slack/events', methods=['POST'])
@@ -90,59 +128,39 @@ def events():
     payload = request.get_data()
     data = json.loads(payload)
 
-    print("\n event data : ", data)
-
     return Response(data["challenge"], mimetype='application/x-www-form-urlencoded')
 
 
 @app.route('/slack/oauth', methods=['POST'])
 def oauth():
-    code = request.args.get('code')
-    slack_client.api_call(
-        "oauth.access",
-        client_id=SLACK_CLIENT_ID,
-        client_secret=SLACK_CLIENT_SECRET,
-        code=code
-    )
+    slack_bot = slackBot
+    slack_bot.code = request.args.get('code')
+    slack_bot.oauth()
 
     return Response(), 200
-
-
-def send_message(channel_id, message):
-    slack_client.api_call(
-        "chat.postMessage",
-        channel=channel_id,
-        attachments=message,
-        username='RomiRomi',
-        icon_emoji=':monkey_face:'
-    )
 
 
 # button actions
 @app.route('/slack/actions', methods=['POST'])
 def interactive_callback():
-    # print("interaction callback")
+    slack_bot = slackBot
+
     payload = json.loads(request.form['payload'])
 
-    channel_id = payload['channel']['id']
+    slack_bot.channel_id = payload['channel']['id']
     value = payload['actions'][0]['value']
-    type = payload['actions'][0]['name']
+    type_code = payload['actions'][0]['name']
 
     keywords = value.split(',')
+    slackBot.message = tour_api(keywords, type_code)
 
-    message = tour_api(keywords, type)
+    response = slack_bot.send_message()
 
-    try:
-        send_message(channel_id, message)
-    except BaseException as ex:
-        print("send_message (error) : ", ex)
-
-    return Response(), 200
+    return Response(), response
 
 
 # 키워드 추출(검색어 추출)
 def extra_keyword(text):
-    print(" \n 1. 키워드 추출 ")
     sentence = text
     words = konlpy.tag.Twitter().pos(sentence)
 
@@ -166,7 +184,6 @@ def extra_keyword(text):
 
 # 정보 가져오기
 def tour_api(keywords, type_code):
-
     api_info = extra_api(keywords, type_code)
 
     if type_code == "location":
@@ -179,14 +196,9 @@ def tour_api(keywords, type_code):
 
 # 키워드 정보 받아서 api 정보 전달
 def extra_api(keywords, type_code):
-    print("\n 2. extra api ")
-    # print("\n keywords : ", keywords)
-
     # 첫번째 키워드가 지명 두번째가 콘텐츠 타입이라고 가정
     addr = keywords[0]
     type = keywords[1]
-
-    print(" \n========= type code====", type_code)
 
     if type_code == "location":
         code_dict = location_info(addr)
@@ -196,42 +208,32 @@ def extra_api(keywords, type_code):
     type = type_info(type)
     code_dict.update(type)
 
-    print("\n 2. extra api result :", code_dict)
-
     return code_dict
 
 
 # 위치 정보 가져오기
 def location_info(addr):
-    print(" \n 3. loaction base info")
-
-    url = "https://maps.googleapis.com/maps/api/geocode/json"
-    params = {
+    call_api = callAPI()
+    call_api.url = "https://maps.googleapis.com/maps/api/geocode/json"
+    call_api.params = {
         'key': 'AIzaSyA_CnvlGifC88wJJBdriNetzsuZY_0CIfI',
         'address': addr,
     }
 
-    try:
-        response = requests.get(url, params=params)
-    except BaseException as ex:
-        print("\n send api error : ", ex, "\n")
-
-    result = response.json()
-    status = result['status']
+    response = call_api.send_api()
 
     location = {}
-    if status == 'OK':
-        location = result['results'][0]['geometry']['location']
-
-    print(" \n 3. loaction base info result :", location)
+    if response:
+        result = response.json()
+        status = result['status']
+        if status == 'OK':
+            location = result['results'][0]['geometry']['location']
 
     return location
 
 
 # 주소 정보 가져오기
 def addr_info(addr):
-    print(" \n 3. type base addr info")
-
     url = 'http://www.juso.go.kr/addrlink/addrLinkApi.do'
     params = {
         'confmKey': 'U01TX0FVVEgyMDE3MDgwOTE5MDgxNjIzNzY5',
@@ -301,11 +303,10 @@ def addr_info(addr):
 
 # 타입 정보 가져오기
 def type_info(type_str):
-    print("\n 4. type info ")
-    url = "http://api.visitkorea.or.kr/openapi/service/rest/KorService/searchKeyword?ServiceKey=0tGMz" \
+    call_api = callAPI()
+    call_api.url = "http://api.visitkorea.or.kr/openapi/service/rest/KorService/searchKeyword?ServiceKey=0tGMz" \
           "%2FY9NJAmuX2b5XBvz2jtdGMVxjmqpEk6dB%2FoX65tTQruqoO6A3Mpk5en%2BbqSaQCIBLWqiXU8vMVDNTdhiA%3D%3D& "
-
-    params = {
+    call_api.params = {
         'numOfRows' : 1,
         'MobileApp': 'romiBot',
         'MobileOS': 'ETC',
@@ -314,38 +315,27 @@ def type_info(type_str):
         '_type': 'json'
     }
 
-    try:
-        response = requests.get(url, params=params)
-    except BaseException as ex:
-        print("send api error : ", ex)
-
-
-    result = response.json()
-    type_result = result['response']['body']['items']['item']
-    print("\n type_code result : ", result , "\n")
+    response = call_api.send_api()
 
     type = {}
-    type['type'] = type_result['contenttypeid'] if 'contenttypeid' in type_result else ''
-    type['cat1'] = type_result['cat1'] if 'cat1' in type_result else ''
-    type['cat2'] = type_result['cat2'] if 'cat2' in type_result else ''
-    type['cat3'] = type_result['cat3'] if 'cat3' in type_result else ''
+    if response:
+        result = response.json()
+        type_result = result['response']['body']['items']['item']
 
-    print("\n 4. type info result : ", type)
+        type['type'] = type_result['contenttypeid'] if 'contenttypeid' in type_result else ''
+        type['cat1'] = type_result['cat1'] if 'cat1' in type_result else ''
+        type['cat2'] = type_result['cat2'] if 'cat2' in type_result else ''
+        type['cat3'] = type_result['cat3'] if 'cat3' in type_result else ''
 
     return type
 
 
 # location base api 호출
 def location_base_api(code_dict):
-
-    print(" \n 5. loaction base api")
-
-    url = "http://api.visitkorea.or.kr/openapi/service/rest/KorService/locationBasedList?ServiceKey=0tGMz" \
+    call_api = callAPI()
+    call_api.url = "http://api.visitkorea.or.kr/openapi/service/rest/KorService/locationBasedList?ServiceKey=0tGMz" \
           "%2FY9NJAmuX2b5XBvz2jtdGMVxjmqpEk6dB%2FoX65tTQruqoO6A3Mpk5en%2BbqSaQCIBLWqiXU8vMVDNTdhiA%3D%3D& "
-
-    # print("\n api info : ", code_dict, "\n")
-
-    params = {
+    call_api.params = {
         'numOfRows': 10,
         'pageNo' : 1,
         'arrange': 'B',
@@ -358,32 +348,23 @@ def location_base_api(code_dict):
         '_type': 'json'
     }
 
-    try:
-        response = requests.get(url, params=params)
-    except BaseException as ex:
-        print("send api error : ", ex)
+    response = call_api.send_api()
 
+    if response:
+        result = response.json()
+        result.update(code_dict)
 
-    result = response.json()
-    result.update(code_dict)
+        return parsing_api(result, "location")
 
-    print("\n 5. location base api result : ", result)
-    parsing_result = parsing_api(result, "location")
-
-
-    return parsing_result
+    return {}
 
 
 # type base api 호출
 def type_base_api(code_dict):
-    print("\n 5. type base api ")
-
-    url = "http://api.visitkorea.or.kr/openapi/service/rest/KorService/areaBasedList?ServiceKey=0tGMz" \
+    call_api = callAPI()
+    call_api.url = "http://api.visitkorea.or.kr/openapi/service/rest/KorService/areaBasedList?ServiceKey=0tGMz" \
           "%2FY9NJAmuX2b5XBvz2jtdGMVxjmqpEk6dB%2FoX65tTQruqoO6A3Mpk5en%2BbqSaQCIBLWqiXU8vMVDNTdhiA%3D%3D& "
-
-    # print("\n api info : ", code_dict, "\n")
-
-    params = {
+    call_api.params = {
         'numOfRows': 1,
         'arrange': 'A',
         'MobileApp': 'romiBot',
@@ -397,33 +378,23 @@ def type_base_api(code_dict):
         '_type': 'json'
     }
 
-    try:
-        response = requests.get(url, params=params)
-    except BaseException as ex:
-        print("send api error : ", ex)
+    response = call_api.send_api()
 
-    result = response.json()
-    result.update(code_dict)
+    if response:
+        result = response.json()
+        result.update(code_dict)
 
-    print("\n 5. type base api result : ", result)
+        return parsing_api(result, "type")
 
-    parsing_result = parsing_api(result, "type")
-
-    return parsing_result
+    return {}
 
 
 # api 결과 파싱
 def parsing_api(api_info, type):
-    print(" \n 6. api 결과 파싱")
     result_code = api_info['response']['header']['resultCode']
-
-    print("\n last api info : " , api_info, "\n")
 
     attachments = {}
     items = api_info['response']['body']['items']
-
-    print("\n last api result items : ",  items, "\n")
-
     if items and result_code == "0000":
         item_arr = items['item']
         if type == "location":
@@ -447,8 +418,6 @@ def parsing_api(api_info, type):
         attachments['title'] = "정보를 찾지못했어요ㅠㅠ"
         attachments['title_link'] = "http://www.naver.com"
         attachments['text'] = "관리자한테 문의해주세요."
-
-    # print("\n send message : ", {'documents' : attachments} , "\n")
 
     return {'documents' : attachments}
 
