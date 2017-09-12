@@ -6,12 +6,15 @@ from slackclient import SlackClient
 import requests
 import konlpy
 import nltk
+from konlpy.tag import Mecab
+
 from flask.ext.restful import Api, Resource, reqparse, fields, marshal
 
 app = Flask(__name__)
+# SLACK BOT TOKEN
 SLACK_BOT_UESR_TOKEN = os.environ.get('SLACK_BOT_USER_TOKEN')
 SLACK_AUTH_TOKEN = os.environ.get('SLACK_AUTH_TOKEN')
-
+# SLACK OAUTH
 SLACK_CLIENT_ID = os.environ.get('SLACK_CLIENT_ID')
 SLACK_CLIENT_SECRET =  os.environ.get('SLACK_CLIENT_SECRET')
 SLACK_VERIFICATION_TOKEN = os.environ.get('SLACK_VERIFICATION_TOKEN')
@@ -27,6 +30,7 @@ class slackBot:
         self.verification = SLACK_VERIFICATION_TOKEN
         self.slack_client = SlackClient(SLACK_BOT_UESR_TOKEN)
         self.code = ""
+        self.type = "location"
 
     def send_message(self):
         try:
@@ -40,8 +44,6 @@ class slackBot:
         except BaseException as ex:
             print("send_message (error) : ", ex)
             return 500
-
-        print("\send message : ", self.message)
 
         return 200
 
@@ -68,16 +70,16 @@ class callAPI:
         return response
 
 
-# test url
+# local test url
 @app.route('/test', methods=['POST'])
 def test():
     slack_bot = slackBot()
     slack_bot.text = request.form.get('text')
     slack_bot.channel_id = request.form.get('channel_id')
-    type_code = request.form.get('type_code')
+    slack_bot.type = request.form.get('type')
 
     keywords = extra_keyword(slack_bot.text)
-    slack_bot.message = tour_api(keywords, type_code)
+    slack_bot.message = tour_api(keywords)
 
     response = slack_bot.send_message()
 
@@ -143,16 +145,16 @@ def oauth():
 # button actions
 @app.route('/slack/actions', methods=['POST'])
 def interactive_callback():
-    slack_bot = slackBot
+    slack_bot = slackBot()
 
     payload = json.loads(request.form['payload'])
 
     slack_bot.channel_id = payload['channel']['id']
     value = payload['actions'][0]['value']
-    type_code = payload['actions'][0]['name']
+    slack_bot.type = payload['actions'][0]['name']
 
     keywords = value.split(',')
-    slackBot.message = tour_api(keywords, type_code)
+    slack_bot.message = tour_api(keywords)
 
     response = slack_bot.send_message()
 
@@ -161,8 +163,7 @@ def interactive_callback():
 
 # 키워드 추출(검색어 추출)
 def extra_keyword(text):
-    sentence = text
-    words = konlpy.tag.Twitter().pos(sentence)
+    words = konlpy.tag.Mecab().pos(text)
 
     grammar = """
     NP: {<N.*>*<Suffix>?}   # Noun phrase
@@ -172,21 +173,27 @@ def extra_keyword(text):
     parser = nltk.RegexpParser(grammar)
     chunks = parser.parse(words)
 
-    keywords = []
+    keywords = {}
     for subtree in chunks.subtrees():
         if subtree.label() == 'NP':
             # keywords.append(str(e[0]) for e in list(subtree))
-            for e in list(subtree):
-                keywords.append(e[0])
+            for index,e in enumerate(list(subtree)):
+                if str(e[1]) == 'NNP':
+                    keywords['location'] = e[0]
+                elif str(e[1]) == 'NNG':
+                    keywords['type'] = e[0]
+                else:
+                    keywords[index] = e[0]
 
     return keywords
 
 
 # 정보 가져오기
-def tour_api(keywords, type_code):
-    api_info = extra_api(keywords, type_code)
+def tour_api(keywords):
+    slack_bot = slackBot()
+    api_info = extra_api(keywords)
 
-    if type_code == "location":
+    if slack_bot.type == "location":
         send_info = location_base_api(api_info)
     else:
         send_info = type_base_api(api_info)
@@ -195,12 +202,16 @@ def tour_api(keywords, type_code):
 
 
 # 키워드 정보 받아서 api 정보 전달
-def extra_api(keywords, type_code):
-    # 첫번째 키워드가 지명 두번째가 콘텐츠 타입이라고 가정
-    addr = keywords[0]
-    type = keywords[1]
+def extra_api(keywords):
+    slack_bot = slackBot()
 
-    if type_code == "location":
+    # TODO : 키워드에서 장소정보와 타입정보가 없을 경우 다시 묻는 거 필요함
+    # TODO -> 기존에 말했던 장소와 타입을 기억하기 위해서 global variale에 저장
+
+    addr = keywords['location'] if 'location' in keywords else '상암동'
+    type = keywords['type'] if 'type' in keywords else '카페'
+
+    if slack_bot.type == "location":
         code_dict = location_info(addr)
     else:
         code_dict = addr_info(addr)
