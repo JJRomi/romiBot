@@ -1,0 +1,16 @@
+Metadata-Version: 2.0
+Name: Python-EasyConfig
+Version: 0.1.6
+Summary: A simple library for loading configurations easily in Python, inspired by `flask.config`.
+Home-page: https://github.com/RussellLuo/easyconfig
+Author: RussellLuo
+Author-email: luopeng.he@gmail.com
+License: MIT
+Keywords: Configuration,Python
+Platform: UNKNOWN
+Requires-Dist: six (==1.9.0)
+Requires-Dist: PyYAML (>=3.10)
+
+A simple library for loading configurations easily in Python, inspired by `flask.config`.
+
+
