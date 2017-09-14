@@ -7,7 +7,6 @@ import requests
 import konlpy
 import nltk
 from konlpy.tag import Mecab
-
 from flask.ext.restful import Api, Resource, reqparse, fields, marshal
 
 app = Flask(__name__)
@@ -30,7 +29,9 @@ class slackBot:
         self.verification = SLACK_VERIFICATION_TOKEN
         self.slack_client = SlackClient(SLACK_BOT_UESR_TOKEN)
         self.code = ""
-        self.type = "location"
+        self.type = ""
+        self.location = ""
+        self.type_code = ""
 
     def send_message(self):
         try:
@@ -61,66 +62,80 @@ class callAPI:
         self.url = ""
         self.params = {}
 
-    def send_api(self):
+    def get_send_api(self):
         try:
             response = requests.get(self.url, params=self.params)
+            result = response.json()
         except BaseException as ex:
             print("\n send api error : ", ex, "\n")
 
-        return response
+        return result
 
 
 # local test url
 @app.route('/test', methods=['POST'])
 def test():
-    slack_bot = slackBot()
-    slack_bot.text = request.form.get('text')
-    slack_bot.channel_id = request.form.get('channel_id')
-    slack_bot.type = request.form.get('type')
+    slackBot.text = request.form.get('text')
+    slackBot.channel_id = request.form.get('channel_id')
+    slackBot.type = request.form.get('type_code')
 
-    keywords = extra_keyword(slack_bot.text)
-    slack_bot.message = tour_api(keywords)
+    extra_keyword(slackBot.text)
+    keyword_addr()
 
-    response = slack_bot.send_message()
+    # response = slackBot.send_message()
 
-    return Response(), response
+    return Response()#, response
 
 
 # button select message (type select)
 @app.route('/webhook', methods=['POST'])
 def btn_select():
-    slack_bot = slackBot()
-    slack_bot.text = request.form.get('text')
-    slack_bot.channel_id = request.form.get('channel_id')
+    slackBot.text = request.form.get('text')
+    slackBot.channel_id = request.form.get('channel_id')
 
     # text로 keyword 추출
-    keywords = extra_keyword(slack_bot.text)
-    slack_bot.message = [
-        {
-            "text": keywords[0] + keywords[1] + " 찾고 계신가요??",
-            "fallback": "",
-            "callback_id": "select tour",
-            "color": "#3AA3E3",
-            "attachment_type": "default",
-            'actions': [
-                {
-                    "name": "location",
-                    "text": "위치 중심 검색",
-                    "type": "button",
-                    "value": keywords[0] + "," + keywords[1]
-                },
-                {
-                    "name": "type",
-                    "text": "타입 중심 검색",
-                    "type": "button",
-                    "value": keywords[0] + "," + keywords[1]
-                },
-            ]
+    extra_keyword(slackBot.text)
 
-        }
-    ]
-
-    response = slack_bot.send_message()
+    # 장소, 타입 정보 있는 지 확인 후 답변
+    if slackBot.location == "":
+        slackBot.message = [
+            {
+                'title': '장소를 알려주세요.',
+                'text': '장소정보를 찾지 못했어요. 다시 상세하게 알려주세요.'
+            }
+        ]
+    elif slackBot.type_code == "":
+        slackBot.message = [
+            {
+                'title': '어떤 정보를 알려드릴까요?',
+                'text': '원하시는 정보가 무엇인지 모르겠어요. 다시 상세하게 알려주세요.'
+            }
+        ]
+    else:
+        slackBot.message = [
+            {
+                "text": slackBot.location + "에서의 " + slackBot.type_code + " 찾고 계신가요??",
+                "fallback": "",
+                "callback_id": "select tour",
+                "color": "#3AA3E3",
+                "attachment_type": "default",
+                'actions': [
+                    {
+                        "name": "location",
+                        "text": "위치 중심 검색",
+                        "type": "button",
+                        "value": ""
+                    },
+                    {
+                        "name": "type",
+                        "text": "타입 중심 검색",
+                        "type": "button",
+                        "value": ""
+                    },
+                ]
+            }
+        ]
+    response = slackBot.send_message()
 
     return Response(), response
 
@@ -135,30 +150,23 @@ def events():
 
 @app.route('/slack/oauth', methods=['POST'])
 def oauth():
-    slack_bot = slackBot
-    slack_bot.code = request.args.get('code')
-    slack_bot.oauth()
+    slackBot.code = request.args.get('code')
+    slackBot.oauth()
 
     return Response(), 200
 
 
-# button actions
+# button click actions
 @app.route('/slack/actions', methods=['POST'])
 def interactive_callback():
-    slack_bot = slackBot()
-
     payload = json.loads(request.form['payload'])
+    slackBot.channel_id = payload['channel']['id']
 
-    slack_bot.channel_id = payload['channel']['id']
-    value = payload['actions'][0]['value']
-    slack_bot.type = payload['actions'][0]['name']
-
-    keywords = value.split(',')
-    slack_bot.message = tour_api(keywords)
-
-    response = slack_bot.send_message()
-
-    return Response(), response
+    if slackBot.channel_id == 'select tour':
+        slackBot.type = payload['actions'][0]['name']
+        keyword_addr()
+    else:
+        extra_api(payload['actions'][0]['value'])
 
 
 # 키워드 추출(검색어 추출)
@@ -173,138 +181,132 @@ def extra_keyword(text):
     parser = nltk.RegexpParser(grammar)
     chunks = parser.parse(words)
 
-    keywords = {}
+    str_location = []
+    str_type = []
     for subtree in chunks.subtrees():
         if subtree.label() == 'NP':
-            # keywords.append(str(e[0]) for e in list(subtree))
-            for index,e in enumerate(list(subtree)):
+            for index, e in enumerate(list(subtree)):
                 if str(e[1]) == 'NNP':
-                    keywords['location'] = e[0]
+                    str_location.append(e[0])
                 elif str(e[1]) == 'NNG':
-                    keywords['type'] = e[0]
-                else:
-                    keywords[index] = e[0]
+                    str_type.append((e[0]))
 
-    return keywords
+    slackBot.location = ''.join(str_location)
+    slackBot.type_code = ''.join(str_type)
 
 
-# 정보 가져오기
-def tour_api(keywords):
-    slack_bot = slackBot()
-    api_info = extra_api(keywords)
-
-    if slack_bot.type == "location":
-        send_info = location_base_api(api_info)
+# 주소 정보 타입별로 출력
+def extra_api(location):
+    code_dict = type_info(slackBot.type_code)
+    if slackBot.type == 'location':
+        code_dict['lng'] = location['frontLon']
+        code_dict['lat'] = location['frontLat']
+        location_base_api(code_dict)
     else:
-        send_info = type_base_api(api_info)
-
-    return send_info
-
-
-# 키워드 정보 받아서 api 정보 전달
-def extra_api(keywords):
-    slack_bot = slackBot()
-
-    # TODO : 키워드에서 장소정보와 타입정보가 없을 경우 다시 묻는 거 필요함
-    # TODO -> 기존에 말했던 장소와 타입을 기억하기 위해서 global variale에 저장
-
-    addr = keywords['location'] if 'location' in keywords else '상암동'
-    type = keywords['type'] if 'type' in keywords else '카페'
-
-    if slack_bot.type == "location":
-        code_dict = location_info(addr)
-    else:
-        code_dict = addr_info(addr)
-
-    type = type_info(type)
-    code_dict.update(type)
-
-    return code_dict
+        area_dict = area_info(location)
+        code_dict.update(area_dict)
+        type_base_api(code_dict)
 
 
-# 위치 정보 가져오기
-def location_info(addr):
+# 키워드로 주소 정보 확인
+def keyword_addr():
     call_api = callAPI()
-    call_api.url = "https://maps.googleapis.com/maps/api/geocode/json"
+    call_api.url = 'http://apis.skplanetx.com/tmap/pois'
     call_api.params = {
-        'key': 'AIzaSyA_CnvlGifC88wJJBdriNetzsuZY_0CIfI',
-        'address': addr,
+        'appKey': '6c8d5711-b0e5-30b1-8aa3-1cdfd328db49',
+        'version': '1',
+        'format': 'json',
+        'searchKeyword': slackBot.location,
+        'page': '1',
+        'count': '5',
     }
 
-    response = call_api.send_api()
+    result = call_api.get_send_api()
+    error_code = result['error']['id'] if 'error' in result else ''
 
-    location = {}
-    if response:
-        result = response.json()
-        status = result['status']
-        if status == 'OK':
-            location = result['results'][0]['geometry']['location']
+    if error_code == '':
+        total_count = int(result['searchPoiInfo']['totalCount'])
+        # 주소 정보가 많을 경우 선택
+        if total_count > 1:
+            btn_message = [
+                {
+                    "text": "검색하신 장소를 선택해주세요.",
+                    "fallback": "",
+                    "callback_id": "select addr info",
+                    "color": "#3AA3E3",
+                    "attachment_type": "default",
+                    'actions': []
+                }
+            ]
 
-    return location
+            str_addr = ""
+            for addr in result['searchPoiInfo']['pois']['poi']:
+                if str_addr != addr['upperAddrName'] + " " + addr['middleAddrName'] + " " + addr['lowerAddrName']:
+                    coordinate = {
+                                    "name": addr['id'],
+                                    "text": addr['upperAddrName'] + " " + addr['middleAddrName'] + " " + addr['lowerAddrName'],
+                                    "type": "button",
+                                    "value": addr
+                                }
+                    str_addr = addr['upperAddrName'] + " " + addr['middleAddrName'] + " " + addr['lowerAddrName']
+                    btn_message.append(coordinate)
+            slackBot.message = btn_message
+        elif total_count == 1:
+            extra_api(result['searchPoiInfo']['pois']['poi'][0])
+        else:
+            slackBot.message = [
+                {
+                    'title': '찾으시는 장소가 ' + slackBot.location + '이 맞나요?',
+                    'text': '상세 장소 정보를 찾지 못했어요. 다시 자세하게 알려주시겠어요? '
+                }
+            ]
+    else:
+        slackBot.message = [
+            {
+                'title': slackBot.location + ' 어디 ' + slackBot.type_code + '를 원하시나요?',
+                'text': slackBot.location + '의 자세한 장소를 알려주세요.'
+            }
+        ]
+    response = slackBot.send_message()
+
+    return Response(), response
 
 
 # 주소 정보 가져오기
-def addr_info(addr):
-    url = 'http://www.juso.go.kr/addrlink/addrLinkApi.do'
-    params = {
-        'confmKey': 'U01TX0FVVEgyMDE3MDgwOTE5MDgxNjIzNzY5',
-        'currentPage': 1,
-        'countPerPage': 1,
-        'keyword': addr,
-        'resultType': 'json',
+def area_info(addr):
+    call_api = callAPI()
+    call_api.url = "http://api.visitkorea.or.kr/openapi/service/rest/KorService/areaCode?ServiceKey=0tGMz" \
+                   "%2FY9NJAmuX2b5XBvz2jtdGMVxjmqpEk6dB%2FoX65tTQruqoO6A3Mpk5en%2BbqSaQCIBLWqiXU8vMVDNTdhiA%3D%3D& "
+    call_api.params = {
+        'numOfRows': 40,
+        'arrange': 'A',
+        'MobileApp': 'romiBot',
+        'MobileOS': 'ETC',
+        '_type': 'json'
     }
 
-    try:
-        response = requests.get(url, params=params)
-    except BaseException as ex:
-        print("\n send api error : ", ex, "\n")
-
-    result = response.json()
-
-    area_code = {}
-    error_code = result['results']['common']['errorCode']
-
-    if error_code == 'E0006':
-        area_name = addr
-        area_name2 = ''
-    elif error_code == '0':
-        area_arr = result['results']['juso'][0]
-        area_name = area_arr['siNm']
-        area_name2 = area_arr['sggNm']
-
-    try:
-        addr_response = requests.get(
-            'http://api.visitkorea.or.kr/openapi/service/rest/KorService/areaCode?ServiceKey=0tGMz%2FY9NJAmuX2b5XBvz2jtdGMVxjmqpEk6dB%2FoX65tTQruqoO6A3Mpk5en%2BbqSaQCIBLWqiXU8vMVDNTdhiA%3D%3D&MobileOS=ETC&MobileApp=romiBot&numOfRows=40&_type=json')
-    except BaseException as ex:
-        print("\n addr code api error : ", ex, "\n")
-
-    addr_result = addr_response.json()
+    addr_result = call_api.get_send_api()
     code_arr = addr_result['response']['body']['items']['item']
 
+    area_code = {}
     for code in code_arr:
-        if code['name'] in area_name:
+        if code['name'] in addr['upperAddrName']:
             area_code['area_code'] = code['code']
 
-    if area_name2:
-        url = 'http://api.visitkorea.or.kr/openapi/service/rest/KorService/areaCode?ServiceKey=0tGMz%2FY9NJAmuX2b5XBvz2jtdGMVxjmqpEk6dB%2FoX65tTQruqoO6A3Mpk5en%2BbqSaQCIBLWqiXU8vMVDNTdhiA%3D%3D'
-        params = {
+    if slackBot.location not in addr['upperAddrName']:
+        call_api.url = 'http://api.visitkorea.or.kr/openapi/service/rest/KorService/areaCode?ServiceKey=0tGMz%2FY9NJAmuX2b5XBvz2jtdGMVxjmqpEk6dB%2FoX65tTQruqoO6A3Mpk5en%2BbqSaQCIBLWqiXU8vMVDNTdhiA%3D%3D'
+        call_api.params = {
             'MobileOS': 'ETC',
             'MobileApp': 'romiBot',
             'numOfRows': 100,
             '_type': 'json',
             'areaCode': area_code['area_code']
         }
-
-        try:
-            addr2_response = requests.get(url, params=params)
-        except BaseException as ex:
-            print("\n addr code2 api error : ", ex, "\n")
-
-        addr2_result = addr2_response.json()
+        addr2_result = call_api.get_send_api()
         code2_arr = addr2_result['response']['body']['items']['item']
 
         for code in code2_arr:
-            if code['name'] in area_name2:
+            if code['name'] in addr['middleAddrName']:
                 area_code['sigungu_code'] = code['code']
 
     print(" \n 3. type base addr info :", area_code)
@@ -326,11 +328,10 @@ def type_info(type_str):
         '_type': 'json'
     }
 
-    response = call_api.send_api()
+    result= call_api.get_send_api()
 
     type = {}
-    if response:
-        result = response.json()
+    if result:
         type_result = result['response']['body']['items']['item']
 
         type['type'] = type_result['contenttypeid'] if 'contenttypeid' in type_result else ''
@@ -359,10 +360,9 @@ def location_base_api(code_dict):
         '_type': 'json'
     }
 
-    response = call_api.send_api()
+    result = call_api.get_send_api()
 
-    if response:
-        result = response.json()
+    if result:
         result.update(code_dict)
 
         return parsing_api(result, "location")
@@ -389,10 +389,9 @@ def type_base_api(code_dict):
         '_type': 'json'
     }
 
-    response = call_api.send_api()
+    result = call_api.get_send_api()
 
-    if response:
-        result = response.json()
+    if result:
         result.update(code_dict)
 
         return parsing_api(result, "type")
@@ -410,7 +409,6 @@ def parsing_api(api_info, type):
         item_arr = items['item']
         if type == "location":
             for item in item_arr:
-                # if item['cat1'] == api_info
                 if item['cat1'] == api_info['cat1']:#and item['cat2'] == api_info['cat2'] and item['cat3'] == api_info['cat3']:
 
                     mapx = str(item['mapx']) if 'mapx' in item.keys() else ''
