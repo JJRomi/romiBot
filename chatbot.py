@@ -11,7 +11,7 @@ from flask.ext.restful import Api, Resource, reqparse, fields, marshal
 
 app = Flask(__name__)
 # SLACK BOT TOKEN
-SLACK_BOT_UESR_TOKEN = os.environ.get('SLACK_BOT_USER_TOKEN')
+SLACK_BOT_UESR_TOKEN = "xoxb-236161775555-ZXejXBwERbeYEEIp28jTeepb"# os.environ.get('SLACK_BOT_USER_TOKEN')
 SLACK_AUTH_TOKEN = os.environ.get('SLACK_AUTH_TOKEN')
 # SLACK OAUTH
 SLACK_CLIENT_ID = os.environ.get('SLACK_CLIENT_ID')
@@ -78,13 +78,12 @@ def test():
     slackBot.text = request.form.get('text')
     slackBot.channel_id = request.form.get('channel_id')
     slackBot.type = request.form.get('type_code')
-
     extra_keyword(slackBot.text)
     keyword_addr()
 
-    # response = slackBot.send_message()
+    response = slackBot().send_message()
 
-    return Response()#, response
+    return Response(), response
 
 
 # button select message (type select)
@@ -208,6 +207,7 @@ def extra_api(location):
         type_base_api(code_dict)
 
 
+
 # 키워드로 주소 정보 확인
 def keyword_addr():
     call_api = callAPI()
@@ -223,7 +223,6 @@ def keyword_addr():
 
     result = call_api.get_send_api()
     error_code = result['error']['id'] if 'error' in result else ''
-
     if error_code == '':
         total_count = int(result['searchPoiInfo']['totalCount'])
         # 주소 정보가 많을 경우 선택
@@ -251,6 +250,7 @@ def keyword_addr():
                     str_addr = addr['upperAddrName'] + " " + addr['middleAddrName'] + " " + addr['lowerAddrName']
                     btn_message.append(coordinate)
             slackBot.message = btn_message
+
         elif total_count == 1:
             extra_api(result['searchPoiInfo']['pois']['poi'][0])
         else:
@@ -267,7 +267,7 @@ def keyword_addr():
                 'text': slackBot.location + '의 자세한 장소를 알려주세요.'
             }
         ]
-    response = slackBot.send_message()
+    response = slackBot().send_message()
 
     return Response(), response
 
@@ -308,8 +308,6 @@ def area_info(addr):
         for code in code2_arr:
             if code['name'] in addr['middleAddrName']:
                 area_code['sigungu_code'] = code['code']
-
-    print(" \n 3. type base addr info :", area_code)
 
     return area_code
 
@@ -364,10 +362,14 @@ def location_base_api(code_dict):
 
     if result:
         result.update(code_dict)
-
-        return parsing_api(result, "location")
-
-    return {}
+        slackBot.message = parsing_api(result, "location")
+    else:
+        slackBot.message = [
+            {
+                'title': slackBot.location + ' 어디 ' + slackBot.type_code + '를 원하시나요?',
+                'text': slackBot.location + '의 자세한 장소를 알려주세요.'
+            }
+        ]
 
 
 # type base api 호출
@@ -393,10 +395,14 @@ def type_base_api(code_dict):
 
     if result:
         result.update(code_dict)
-
-        return parsing_api(result, "type")
-
-    return {}
+        slackBot.message = parsing_api(result, "type")
+    else:
+        slackBot.message = [
+            {
+                'title': slackBot.location + ' 어디 ' + slackBot.type_code + '를 원하시나요?',
+                'text': slackBot.location + '의 자세한 장소를 알려주세요.'
+            }
+        ]
 
 
 # api 결과 파싱
