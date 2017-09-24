@@ -11,7 +11,7 @@ from flask.ext.restful import Api, Resource, reqparse, fields, marshal
 
 app = Flask(__name__)
 # SLACK BOT TOKEN
-SLACK_BOT_UESR_TOKEN = "xoxb-236161775555-ZXejXBwERbeYEEIp28jTeepb"# os.environ.get('SLACK_BOT_USER_TOKEN')
+SLACK_BOT_UESR_TOKEN = os.environ.get('SLACK_BOT_USER_TOKEN')
 SLACK_AUTH_TOKEN = os.environ.get('SLACK_AUTH_TOKEN')
 # SLACK OAUTH
 SLACK_CLIENT_ID = os.environ.get('SLACK_CLIENT_ID')
