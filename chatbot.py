@@ -150,7 +150,7 @@ def events():
 @app.route('/slack/oauth', methods=['POST'])
 def oauth():
     slackBot.code = request.args.get('code')
-    slackBot.oauth()
+    slackBot().oauth()
 
     return Response(), 200
 
