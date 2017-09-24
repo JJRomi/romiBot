@@ -134,7 +134,7 @@ def btn_select():
                 ]
             }
         ]
-    response = slackBot.send_message()
+    response = slackBot().send_message()
 
     return Response(), response
 
