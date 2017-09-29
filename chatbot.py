@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import os
+import settings
 
 from flask import Flask, request, Response, make_response, json
 from slackclient import SlackClient
@@ -10,18 +11,10 @@ from konlpy.tag import Mecab
 from flask.ext.restful import Api, Resource, reqparse, fields, marshal
 
 app = Flask(__name__)
-# SLACK BOT TOKEN
-SLACK_BOT_UESR_TOKEN = os.environ.get('SLACK_BOT_USER_TOKEN')
-SLACK_AUTH_TOKEN = os.environ.get('SLACK_AUTH_TOKEN')
-# SLACK OAUTH
-SLACK_CLIENT_ID = os.environ.get('SLACK_CLIENT_ID')
-SLACK_CLIENT_SECRET =  os.environ.get('SLACK_CLIENT_SECRET')
-SLACK_VERIFICATION_TOKEN = os.environ.get('SLACK_VERIFICATION_TOKEN')
-
 
 class slackBot:
     def __init__(self):
-        self.text = "안녕하세요!"
+        self.text = ""
         self.channel_id = ""
         self.message = {}
         self.user_name = "Romi"
@@ -168,6 +161,8 @@ def interactive_callback():
         extra_api(payload['actions'][0]['value'])
 
 
+
+
 # 키워드 추출(검색어 추출)
 def extra_keyword(text):
     words = konlpy.tag.Mecab().pos(text)
@@ -205,7 +200,6 @@ def extra_api(location):
         area_dict = area_info(location)
         code_dict.update(area_dict)
         type_base_api(code_dict)
-
 
 
 # 키워드로 주소 정보 확인
@@ -371,6 +365,10 @@ def location_base_api(code_dict):
             }
         ]
 
+    response = slackBot().send_message()
+
+    return Response(), response
+
 
 # type base api 호출
 def type_base_api(code_dict):
@@ -403,6 +401,10 @@ def type_base_api(code_dict):
                 'text': slackBot.location + '의 자세한 장소를 알려주세요.'
             }
         ]
+
+    response = slackBot().send_message()
+
+    return Response(), response
 
 
 # api 결과 파싱

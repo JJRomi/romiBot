@@ -1,7 +1,108 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e98dcd78-e100-41ed-95ae-0e99ed1d5da1" name="Default" comment="" />
+    <list default="true" id="e98dcd78-e100-41ed-95ae-0e99ed1d5da1" name="Default" comment="">
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/mecab-python-0.996" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/.gitignore" />
+      <change type="NEW" beforePath="" afterPath="$PROJECT_DIR$/settings.example.py" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/.keep" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/AUTHORS" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/COPYING" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/ChangeLog" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/CoinedWord.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/EC.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/EF.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/EP.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/ETM.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/ETN.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/Foreign.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/Group.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/Hanja.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/IC.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/INSTALL" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/Inflect.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/J.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/MAG.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/MAJ.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/MM.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/Makefile" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/Makefile.am" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/Makefile.in" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/NEWS" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/NNB.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/NNBC.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/NNG.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/NNP.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/NP.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/NR.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/NorthKorea.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/Person-actor.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/Person.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/Place-address.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/Place-station.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/Place.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/Preanalysis.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/README" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/Symbol.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/VA.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/VCN.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/VCP.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/VV.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/VX.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/Wikipedia.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/XPN.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/XR.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/XSA.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/XSN.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/XSV.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/aclocal.m4" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/autogen.sh" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/autom4te.cache/output.0" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/autom4te.cache/output.1" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/autom4te.cache/requests" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/autom4te.cache/traces.0" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/autom4te.cache/traces.1" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/char.bin" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/char.def" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/clean" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/config.log" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/config.status" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/configure" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/configure.ac" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/dicrc" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/feature.def" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/install-sh" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/left-id.def" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/matrix.bin" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/matrix.def" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/missing" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/model.bin" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/model.def" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/pos-id.def" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/rewrite.def" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/right-id.def" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/sys.dic" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/tools/add-userdic.sh" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/tools/convert_for_using_store.sh" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/tools/mecab-bestn.sh" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/unk.def" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/unk.dic" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/user-dic/README.md" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/user-dic/nnp.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/user-dic/person.csv" afterPath="" />
+      <change type="DELETED" beforePath="$PROJECT_DIR$/mecab-ko-dic-2.0.1-20150920/user-dic/place.csv" afterPath="" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mecab-0.996-ko-0.9.2/src/.libs/libmecab.a" afterPath="$PROJECT_DIR$/mecab-0.996-ko-0.9.2/src/.libs/libmecab.a" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Dockerfile" afterPath="$PROJECT_DIR$/Dockerfile" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/chatbot.py" afterPath="$PROJECT_DIR$/chatbot.py" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mecab-0.996-ko-0.9.2/config.log" afterPath="$PROJECT_DIR$/mecab-0.996-ko-0.9.2/config.log" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mecab-0.996-ko-0.9.2/src/mecab" afterPath="$PROJECT_DIR$/mecab-0.996-ko-0.9.2/src/mecab" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mecab-0.996-ko-0.9.2/src/mecab-cost-train" afterPath="$PROJECT_DIR$/mecab-0.996-ko-0.9.2/src/mecab-cost-train" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mecab-0.996-ko-0.9.2/src/mecab-dict-gen" afterPath="$PROJECT_DIR$/mecab-0.996-ko-0.9.2/src/mecab-dict-gen" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mecab-0.996-ko-0.9.2/src/mecab-dict-index" afterPath="$PROJECT_DIR$/mecab-0.996-ko-0.9.2/src/mecab-dict-index" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mecab-0.996-ko-0.9.2/src/mecab-system-eval" afterPath="$PROJECT_DIR$/mecab-0.996-ko-0.9.2/src/mecab-system-eval" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/mecab-0.996-ko-0.9.2/src/mecab-test-gen" afterPath="$PROJECT_DIR$/mecab-0.996-ko-0.9.2/src/mecab-test-gen" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -14,23 +115,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="chatbot.py" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/chatbot.py">
+      <file leaf-file-name="Dockerfile" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Dockerfile">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="112">
-              <caret line="173" column="15" lean-forward="false" selection-start-line="173" selection-start-column="15" selection-end-line="173" selection-end-column="15" />
-              <folding>
-                <element signature="e#24#33#0" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="__init__.py" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/venv/lib/python2.7/site-packages/konlpy/__init__.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="133">
-              <caret line="7" column="16" lean-forward="false" selection-start-line="7" selection-start-column="16" selection-end-line="7" selection-end-column="16" />
+            <state relative-caret-position="306">
+              <caret line="59" column="90" lean-forward="false" selection-start-line="59" selection-start-column="90" selection-end-line="59" selection-end-column="90" />
               <folding />
             </state>
           </provider>
@@ -39,8 +128,50 @@
       <file leaf-file-name="requirements.txt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/requirements.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="210">
-              <caret line="14" column="13" lean-forward="true" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
+            <state relative-caret-position="190">
+              <caret line="10" column="16" lean-forward="false" selection-start-line="10" selection-start-column="16" selection-end-line="10" selection-end-column="16" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="chatbot.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/chatbot.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="228">
+              <caret line="12" column="21" lean-forward="false" selection-start-line="12" selection-start-column="21" selection-end-line="12" selection-end-column="21" />
+              <folding>
+                <element signature="e#24#33#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="settings.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/settings.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="114">
+              <caret line="6" column="8" lean-forward="true" selection-start-line="6" selection-start-column="8" selection-end-line="6" selection-end-column="8" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name=".gitignore" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/.gitignore">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="57">
+              <caret line="3" column="11" lean-forward="false" selection-start-line="3" selection-start-column="11" selection-end-line="3" selection-end-column="11" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="settings.example.py" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/settings.example.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="114">
+              <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="15" />
               <folding />
             </state>
           </provider>
@@ -57,22 +188,10 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>FORECAST_TOKEN</find>
-      <find>SLACK_CLIENT_ID</find>
-      <find>tour_fields</find>
-      <find>last api result items</find>
-      <find>loaction</find>
-      <find>location</find>
-      <find>type base</find>
-      <find>oauth</find>
-      <find>self</find>
-      <find>params</find>
-      <find>send api</find>
       <find>code_type</find>
       <find>code</find>
       <find>=</find>
       <find>')</find>
-      <find>print</find>
       <find>location_base_api</find>
       <find>send_in</find>
       <find>type</find>
@@ -86,7 +205,19 @@
       <find>area_info</find>
       <find>send</find>
       <find>keyword_addr</find>
+      <find>konlpy.tag.Mecab().pos(text)</find>
+      <find>mecab-python</find>
+      <find>mecab-</find>
+      <find>./configure --with-charset=utf8</find>
+      <find>__init</find>
+      <find>keyword</find>
+      <find>print</find>
       <find>send_message</find>
+      <find>slackBot</find>
+      <find>oauth</find>
+      <find>event</find>
+      <find>slackBot.text</find>
+      <find>bin</find>
     </findStrings>
     <replaceStrings>
       <replace />
@@ -108,21 +239,26 @@
         <option value="$PROJECT_DIR$/Procfile" />
         <option value="$PROJECT_DIR$/chatbot_backup_170804_2.py" />
         <option value="$PROJECT_DIR$/test.py" />
-        <option value="$PROJECT_DIR$/.gitignore" />
-        <option value="$PROJECT_DIR$/Dockerfile" />
         <option value="$PROJECT_DIR$/message.py" />
-        <option value="$PROJECT_DIR$/requirements.txt" />
         <option value="$PROJECT_DIR$/bot.py" />
         <option value="$PROJECT_DIR$/loaction_base.py" />
-        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/TEST" />
+        <option value="$PROJECT_DIR$/docker-composer.yml" />
+        <option value="$PROJECT_DIR$/requirements.txt" />
+        <option value="$PROJECT_DIR$/README.md" />
         <option value="$PROJECT_DIR$/chatbot.py" />
+        <option value="$PROJECT_DIR$/settings.py" />
+        <option value="$PROJECT_DIR$/.gitignore" />
+        <option value="$PROJECT_DIR$/settings.example.py" />
+        <option value="$PROJECT_DIR$/Dockerfile" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" fullScreen="true">
-    <option name="width" value="1280" />
-    <option name="height" value="800" />
+  <component name="ProjectFrameBounds">
+    <option name="x" value="184" />
+    <option name="y" value="42" />
+    <option name="width" value="1096" />
+    <option name="height" value="777" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -140,8 +276,26 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
-      <pane id="Scratches" />
+      <pane id="Scope">
+        <subPane subId="Changed Files">
+          <expand>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="romi-bot" type="cbb8eebc:String" user="romi-bot" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+        <subPane subId="Project Files">
+          <expand>
+            <path>
+              <item name="Root" type="cbb8eebc:String" user="Root" />
+              <item name="romi-bot" type="cbb8eebc:String" user="romi-bot" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -153,6 +307,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scratches" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -176,17 +331,18 @@
       </list>
     </option>
   </component>
-  <component name="RunManager">
-    <configuration name="Docker Deployment" type="docker-deploy" factoryName="Docker Deployment" server-name="Romi Docker">
-      <deployment type="dockerfile" path="$PROJECT_DIR$/Dockerfile">
+  <component name="RunManager" selected="Docker Deployment.Docker Deployment">
+    <configuration name="Docker Deployment" type="docker-deploy" factoryName="Docker Deployment" temporary="true" server-name="Docker">
+      <deployment type="docker-image">
         <settings>
           <option name="JSONFilePath" value="" />
           <option name="command" value="" />
-          <option name="containerName" value="" />
+          <option name="containerName" value="romiBot" />
           <option name="entrypoint" value="" />
-          <option name="imageTag" value="" />
+          <option name="imageTag" value="sha256:428082f6bbc867def83698e63169aa0b7c47a50bb4a49b0ea344688255c98034" />
+          <option name="portBindingsExpanded" value="true" />
           <option name="startBrowserSettings">
-            <browser url="http://127.0.0.1" />
+            <browser start="true" url="http://127.0.0.1" />
           </option>
         </settings>
       </deployment>
@@ -252,9 +408,40 @@
       <option name="_new_targetType" value="&quot;PATH&quot;" />
       <method />
     </configuration>
+    <configuration name="romi-bot" type="docker-deploy" factoryName="Docker Deployment" server-name="Romi Docker">
+      <deployment type="docker-image">
+        <settings>
+          <option name="JSONFilePath" value="" />
+          <option name="command" value="" />
+          <option name="containerName" value="registry.heroku.com/jromi/web" />
+          <option name="entrypoint" value="" />
+          <option name="imageTag" value="90b9ea7b7e87" />
+          <option name="portBindings">
+            <list>
+              <DockerPortBindingImpl>
+                <option name="containerPort" value="80" />
+                <option name="hostIp" value="127.0.0.1" />
+                <option name="hostPort" value="8000" />
+              </DockerPortBindingImpl>
+            </list>
+          </option>
+          <option name="portBindingsExpanded" value="true" />
+          <option name="startBrowserSettings">
+            <browser start="true" />
+          </option>
+        </settings>
+      </deployment>
+    </configuration>
+    <list size="2">
+      <item index="0" class="java.lang.String" itemvalue="Docker Deployment.romi-bot" />
+      <item index="1" class="java.lang.String" itemvalue="Docker Deployment.Docker Deployment" />
+    </list>
     <recent_temporary>
-      <list size="1">
+      <list size="4">
         <item index="0" class="java.lang.String" itemvalue="Docker Deployment.Docker Deployment" />
+        <item index="1" class="java.lang.String" itemvalue="Docker Deployment.Docker Deployment" />
+        <item index="2" class="java.lang.String" itemvalue="Docker Deployment.Docker Deployment" />
+        <item index="3" class="java.lang.String" itemvalue="Docker Deployment.Docker Deployment" />
       </list>
     </recent_temporary>
   </component>
@@ -284,40 +471,28 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="0" y="0" width="1280" height="800" extended-state="0" />
+    <frame x="184" y="42" width="1096" height="777" extended-state="0" />
     <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1292407" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.2694497" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" x="506" y="176" width="452" height="508" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329927" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
-      <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.34938103" sideWeight="0.47099447" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.35043988" sideWeight="0.5290055" order="7" side_tool="true" content_ui="tabs" />
+      <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25722146" sideWeight="0.46930534" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25513196" sideWeight="0.5351044" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3287483" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.30811554" sideWeight="0.48151848" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32737276" sideWeight="0.49676898" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24484181" sideWeight="0.48142165" order="7" side_tool="false" content_ui="tabs" />
+      <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.25513196" sideWeight="0.46489564" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
       <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32872927" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Cvs" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="4" side_tool="false" content_ui="tabs" />
-      <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.329927" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Message" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
       <window_info id="Commander" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="0" side_tool="false" content_ui="tabs" />
-      <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.35043988" sideWeight="0.5290055" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Inspection" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="5" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3287483" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Python Console" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32737276" sideWeight="0.49676898" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Terminal" active="true" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.24484181" sideWeight="0.48142165" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Hierarchy" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="2" side_tool="false" content_ui="combo" />
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.1276252" sideWeight="0.5" order="0" side_tool="false" content_ui="combo" />
-      <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.34938103" sideWeight="0.47099447" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Find" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Ant Build" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
-      <window_info id="Debug" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.4" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
-      <window_info id="Favorites" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="2" side_tool="true" content_ui="tabs" />
-      <window_info id="Data View" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.32872927" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -330,52 +505,6 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/venv/lib/python2.7/os.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="8493">
-          <caret line="447" column="29" lean-forward="false" selection-start-line="447" selection-start-column="29" selection-end-line="447" selection-end-column="29" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/venv/lib/python2.7/UserDict.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="988">
-          <caret line="52" column="17" lean-forward="false" selection-start-line="52" selection-start-column="17" selection-end-line="52" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/venv/lib/python2.7/site-packages/slackclient/_client.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="950">
-          <caret line="52" column="8" lean-forward="false" selection-start-line="52" selection-start-column="8" selection-end-line="52" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Procfile">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="25" lean-forward="false" selection-start-line="0" selection-start-column="25" selection-end-line="0" selection-end-column="25" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.gitignore" />
-    <entry file="file://$PROJECT_DIR$/requirements.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="17" column="18" lean-forward="false" selection-start-line="17" selection-start-column="18" selection-end-line="17" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/chatbot.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding>
-            <element signature="e#24#33#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/Library/Caches/PyCharmCE2017.1/python_stubs/1032982919/__builtin__.py" />
     <entry file="file://$PROJECT_DIR$/venv/lib/python2.7/os.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -430,13 +559,6 @@
     <entry file="file://$USER_HOME$/Library/Caches/PyCharmCE2017.1/python_stubs/1032982919/__builtin__.py" />
     <entry file="file://$PROJECT_DIR$/tests/urlsplit.py" />
     <entry file="file://$PROJECT_DIR$/tests/test-urlsplit.py" />
-    <entry file="file://$PROJECT_DIR$/venv/lib/python2.7/site-packages/konlpy/tag/_mecab.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1071">
-          <caret line="78" column="42" lean-forward="false" selection-start-line="78" selection-start-column="42" selection-end-line="78" selection-end-column="42" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$USER_HOME$/Library/Caches/PyCharmCE2017.1/python_stubs/1032982919/_MeCab.py" />
     <entry file="file://$PROJECT_DIR$/venv/lib/python2.7/site-packages/MeCab.py">
       <provider selected="true" editor-type-id="text-editor">
@@ -479,21 +601,7 @@
     <entry file="file://$PROJECT_DIR$/chatbot_Backup_#3.py" />
     <entry file="file://$PROJECT_DIR$/chatbot_back_170817.py" />
     <entry file="file://$PROJECT_DIR$/test.py" />
-    <entry file="file://$PROJECT_DIR$/.gitignore" />
-    <entry file="file://$USER_HOME$/Library/Caches/PyCharmCE2017.2/python_stubs/1692688434/__builtin__.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="49115">
-          <caret line="2585" column="12" lean-forward="false" selection-start-line="2585" selection-start-column="12" selection-end-line="2585" selection-end-column="12" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Dockerfile">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="97">
-          <caret line="11" column="32" lean-forward="false" selection-start-line="11" selection-start-column="8" selection-end-line="11" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$USER_HOME$/Library/Caches/PyCharmCE2017.2/python_stubs/1692688434/__builtin__.py" />
     <entry file="file://$PROJECT_DIR$/message.py" />
     <entry file="file://$PROJECT_DIR$/bot.py" />
     <entry file="file://$PROJECT_DIR$/venv/lib/python2.7/site-packages/flask/helpers.py">
@@ -522,38 +630,29 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
-          <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/TEST" />
     <entry file="file://$PROJECT_DIR$/Stoty_slot.md" />
     <entry file="file://$PROJECT_DIR$/api_ai.md" />
-    <entry file="file://$PROJECT_DIR$/README.md">
+    <entry file="file://$PROJECT_DIR$/.gitattributes">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="76">
-          <caret line="4" column="0" lean-forward="false" selection-start-line="4" selection-start-column="0" selection-end-line="4" selection-end-column="0" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/requirements.txt">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="210">
-          <caret line="14" column="13" lean-forward="true" selection-start-line="14" selection-start-column="13" selection-end-line="14" selection-end-column="13" />
-          <folding />
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Procfile">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="0">
-          <caret line="0" column="25" lean-forward="false" selection-start-line="0" selection-start-column="25" selection-end-line="0" selection-end-column="25" />
+          <caret line="0" column="15" lean-forward="false" selection-start-line="0" selection-start-column="15" selection-end-line="0" selection-end-column="15" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/.gitattributes">
+    <entry file="file://$PROJECT_DIR$/mecab-0.996-ko-0.9.2/mecab-config">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
+        <state relative-caret-position="-5">
           <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
         </state>
       </provider>
@@ -562,17 +661,92 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="133">
           <caret line="7" column="16" lean-forward="false" selection-start-line="7" selection-start-column="16" selection-end-line="7" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/docker-composer.yml" />
+    <entry file="file://$PROJECT_DIR$/mecab-0.996-ko-0.9.2/mecab-config.in">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="133">
+          <caret line="7" column="1" lean-forward="true" selection-start-line="7" selection-start-column="1" selection-end-line="7" selection-end-column="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/README.md">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="19">
+          <caret line="1" column="0" lean-forward="true" selection-start-line="1" selection-start-column="0" selection-end-line="1" selection-end-column="0" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/venv/lib/python2.7/site-packages/pymongo/helpers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="171">
+          <caret line="274" column="14" lean-forward="false" selection-start-line="274" selection-start-column="14" selection-end-line="274" selection-end-column="14" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/venv/lib/python2.7/site-packages/konlpy/tag/_mecab.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="184">
+          <caret line="35" column="6" lean-forward="false" selection-start-line="35" selection-start-column="6" selection-end-line="35" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/venv/lib/python2.7/site-packages/telegram/message.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="171">
+          <caret line="339" column="24" lean-forward="false" selection-start-line="339" selection-start-column="24" selection-end-line="339" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/requirements.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="190">
+          <caret line="10" column="16" lean-forward="false" selection-start-line="10" selection-start-column="16" selection-end-line="10" selection-end-column="16" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/chatbot.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="112">
-          <caret line="173" column="15" lean-forward="false" selection-start-line="173" selection-start-column="15" selection-end-line="173" selection-end-column="15" />
+        <state relative-caret-position="228">
+          <caret line="12" column="21" lean-forward="false" selection-start-line="12" selection-start-column="21" selection-end-line="12" selection-end-column="21" />
           <folding>
             <element signature="e#24#33#0" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/settings.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="114">
+          <caret line="6" column="8" lean-forward="true" selection-start-line="6" selection-start-column="8" selection-end-line="6" selection-end-column="8" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.gitignore">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="57">
+          <caret line="3" column="11" lean-forward="false" selection-start-line="3" selection-start-column="11" selection-end-line="3" selection-end-column="11" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/settings.example.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="114">
+          <caret line="6" column="0" lean-forward="false" selection-start-line="6" selection-start-column="0" selection-end-line="6" selection-end-column="15" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Dockerfile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="306">
+          <caret line="59" column="90" lean-forward="false" selection-start-line="59" selection-start-column="90" selection-end-line="59" selection-end-column="90" />
+          <folding />
         </state>
       </provider>
     </entry>
