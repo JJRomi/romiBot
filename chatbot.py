@@ -93,49 +93,50 @@ def btn_select():
     extra_keyword(slack_bot.text)
 
     # 장소, 타입 정보 있는 지 확인 후 답변
-    if slack_bot.location == "":
-        slack_bot.message = [
-            {
-                'title': '장소를 알려주세요.',
-                'text': '장소정보를 찾지 못했어요. 다시 상세하게 알려주세요.'
-            }
-        ]
-    elif slack_bot.type_code == "":
-        slack_bot.message = [
-            {
-                'title': '어떤 정보를 알려드릴까요?',
-                'text': '원하시는 정보가 무엇인지 모르겠어요. 다시 상세하게 알려주세요.'
-            }
-        ]
-    else:
-        slack_bot.message = [
-            {
-                "text": slack_bot.location + "에서의 " + slack_bot.type_code + " 찾고 계신가요??",
-                "fallback": "",
-                "callback_id": "select tour",
-                "color": "#3AA3E3",
-                "attachment_type": "default",
-                'actions': [
-                    {
-                        "name": "location",
-                        "text": "위치 중심 검색",
-                        "type": "button",
-                        "value": ""
-                    },
-                    {
-                        "name": "type",
-                        "text": "타입 중심 검색",
-                        "type": "button",
-                        "value": ""
-                    },
-                ]
-            }
-        ]
-    response = slack_bot.send_message()
+    if slack_bot.text != "":
+        if slack_bot.location == "":
+            slack_bot.message = [
+                {
+                    'title': '장소를 알려주세요.',
+                    'text': '장소정보를 찾지 못했어요. 다시 상세하게 알려주세요.'
+                }
+            ]
+        elif slack_bot.type_code == "":
+            slack_bot.message = [
+                {
+                    'title': '어떤 정보를 알려드릴까요?',
+                    'text': '원하시는 정보가 무엇인지 모르겠어요. 다시 상세하게 알려주세요.'
+                }
+            ]
+        else:
+            slack_bot.message = [
+                {
+                    "text": slack_bot.location + "에서의 " + slack_bot.type_code + " 찾고 계신가요??",
+                    "fallback": "",
+                    "callback_id": "select tour",
+                    "color": "#3AA3E3",
+                    "attachment_type": "default",
+                    'actions': [
+                        {
+                            "name": "location",
+                            "text": "위치 중심 검색",
+                            "type": "button",
+                            "value": ""
+                        },
+                        {
+                            "name": "type",
+                            "text": "타입 중심 검색",
+                            "type": "button",
+                            "value": ""
+                        },
+                    ]
+                }
+            ]
+        print("webhook send message \n")
+        print(slack_bot.message)
+        slack_bot.send_message()
 
-    print("\n webhook send message : ")
-    print(slack_bot.message)
-    return Response(), response
+    return Response()
 
 
 @app.route('/slack/events', methods=['POST'])
