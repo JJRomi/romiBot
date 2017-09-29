@@ -247,7 +247,7 @@ def keyword_addr():
                                     "value": addr
                                 }
                     str_addr = addr['upperAddrName'] + " " + addr['middleAddrName'] + " " + addr['lowerAddrName']
-                    btn_message.append(coordinate)
+                    jbtn_message[0]['actions'].append(coordinate)
             slack_bot.message = btn_message
 
         elif total_count == 1:
