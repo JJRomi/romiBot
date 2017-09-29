@@ -136,10 +136,9 @@ def btn_select():
 def events():
     payload = request.get_data()
     data = json.loads(payload)
-    print(payload)
-    print(data)
+    result = data['challenge'] if 'challenge' in data else ''
 
-    return Response(data["challenge"], mimetype='application/x-www-form-urlencoded')
+    return Response(result, mimetype='application/x-www-form-urlencoded')
 
 
 @app.route('/slack/oauth', methods=['POST'])
