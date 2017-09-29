@@ -72,10 +72,10 @@ def test():
     slackBot.type = request.form.get('type_code')
     extra_keyword(slackBot.text)
     keyword_addr()
+    slackBot.send_message
 
-    response = slackBot.send_message()
-
-    return Response(), response
+    print("\n /test send message : " + slackBot.send_message)
+    return Response()
 
 
 # button select message (type select)
@@ -126,9 +126,10 @@ def btn_select():
                 ]
             }
         ]
-    response = slackBot().send_message()
+    slackBot.send_message
 
-    return Response(), response
+    print("\n webhook send message : " + slackBot.message)
+    return Response()
 
 
 @app.route('/slack/events', methods=['POST'])
@@ -246,6 +247,7 @@ def keyword_addr():
             slackBot.message = btn_message
 
         elif total_count == 1:
+
             extra_api(result['searchPoiInfo']['pois']['poi'][0])
         else:
             slackBot.message = [
@@ -261,9 +263,10 @@ def keyword_addr():
                 'text': slackBot.location + '의 자세한 장소를 알려주세요.'
             }
         ]
-    response = slackBot().send_message()
+    slackBot.send_message
 
-    return Response(), response
+    print("\n keyword arr send message : " + slackBot.message)
+    return Response()
 
 
 # 주소 정보 가져오기
@@ -365,9 +368,10 @@ def location_base_api(code_dict):
             }
         ]
 
-    response = slackBot().send_message()
+    slackBot.send_message
 
-    return Response(), response
+    print("\n location base send message : " + slackBot.message)
+    return Response()
 
 
 # type base api 호출
@@ -401,10 +405,10 @@ def type_base_api(code_dict):
                 'text': slackBot.location + '의 자세한 장소를 알려주세요.'
             }
         ]
+    slackBot.send_message
 
-    response = slackBot().send_message()
-
-    return Response(), response
+    print("\n type base send message : " + slackBot.message)
+    return Response()
 
 
 # api 결과 파싱
@@ -436,7 +440,7 @@ def parsing_api(api_info, type):
         attachments['title_link'] = "http://www.naver.com"
         attachments['text'] = "관리자한테 문의해주세요."
 
-    return {'documents' : attachments}
+    return attachments
 
 
 @app.route('/', methods=['GET'])
