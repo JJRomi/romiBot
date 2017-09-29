@@ -74,7 +74,8 @@ def test():
     keyword_addr()
     slackBot.send_message
 
-    print("\n /test send message : " + slackBot.send_message)
+    print("\n /test send message : ")
+    print(slackBot.message)
     return Response()
 
 
@@ -128,7 +129,8 @@ def btn_select():
         ]
     slackBot.send_message
 
-    print("\n webhook send message : " + slackBot.message)
+    print("\n webhook send message : ")
+    print(slackBot.message)
     return Response()
 
 
@@ -265,7 +267,8 @@ def keyword_addr():
         ]
     slackBot.send_message
 
-    print("\n keyword arr send message : " + slackBot.message)
+    print("\n keyword arr send message : ")
+    print(slackBot.message)
     return Response()
 
 
@@ -370,7 +373,8 @@ def location_base_api(code_dict):
 
     slackBot.send_message
 
-    print("\n location base send message : " + slackBot.message)
+    print("\n location base send message : ")
+    print(slackBot.message)
     return Response()
 
 
@@ -407,7 +411,8 @@ def type_base_api(code_dict):
         ]
     slackBot.send_message
 
-    print("\n type base send message : " + slackBot.message)
+    print("\n type base send message : ")
+    print(slackBot.message)
     return Response()
 
 
