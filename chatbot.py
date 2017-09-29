@@ -165,7 +165,13 @@ def interactive_callback():
         slack_bot.type = payload['actions'][0]['name']
         keyword_addr()
     else:
-        extra_api(payload['actions'][0]['value'])
+        loaction = (payload['actions'][0]['value']).split("/")
+        values = { 'frontLon' : loaction[0],
+                   'frontLat' : loaction[1],
+                 }
+        extra_api(values)
+
+    return Response()
 
 
 # 키워드 추출(검색어 추출)
@@ -244,7 +250,7 @@ def keyword_addr():
                                     "name": addr['id'],
                                     "text": addr['upperAddrName'] + " " + addr['middleAddrName'] + " " + addr['lowerAddrName'],
                                     "type": "button",
-                                    "value": addr
+                                    "value": addr['frontLon'] + "/" + addr['frontLat']
                                 }
                     str_addr = addr['upperAddrName'] + " " + addr['middleAddrName'] + " " + addr['lowerAddrName']
                     btn_message[0]['actions'].append(coordinate)
