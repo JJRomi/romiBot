@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import os
 import settings
 
 from flask import Flask, request, Response, make_response, json
