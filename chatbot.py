@@ -64,49 +64,53 @@ class callAPI:
         return result
 
 
+# slackBot 생성
+slack_bot = slackBot()
+
+
 # local test url
 @app.route('/test', methods=['POST'])
 def test():
-    slackBot.text = request.form.get('text')
-    slackBot.channel_id = request.form.get('channel_id')
-    slackBot.type = request.form.get('type_code')
-    extra_keyword(slackBot.text)
+    slack_bot.text = request.form.get('text')
+    slack_bot.channel_id = request.form.get('channel_id')
+    slack_bot.type = request.form.get('type_code')
+    extra_keyword(slack_bot.text)
     keyword_addr()
-    slackBot.send_message
 
-    print("\n /test send message : ")
-    print(slackBot.message)
-    return Response()
+    response = slack_bot.send_message()
+    print(response)
+
+    return Response(), response
 
 
 # button select message (type select)
 @app.route('/webhook', methods=['POST'])
 def btn_select():
-    slackBot.text = request.form.get('text')
-    slackBot.channel_id = request.form.get('channel_id')
+    slack_bot.text = request.form.get('text')
+    slack_bot.channel_id = request.form.get('channel_id')
 
     # text로 keyword 추출
-    extra_keyword(slackBot.text)
+    extra_keyword(slack_bot.text)
 
     # 장소, 타입 정보 있는 지 확인 후 답변
-    if slackBot.location == "":
-        slackBot.message = [
+    if slack_bot.location == "":
+        slack_bot.message = [
             {
                 'title': '장소를 알려주세요.',
                 'text': '장소정보를 찾지 못했어요. 다시 상세하게 알려주세요.'
             }
         ]
-    elif slackBot.type_code == "":
-        slackBot.message = [
+    elif slack_bot.type_code == "":
+        slack_bot.message = [
             {
                 'title': '어떤 정보를 알려드릴까요?',
                 'text': '원하시는 정보가 무엇인지 모르겠어요. 다시 상세하게 알려주세요.'
             }
         ]
     else:
-        slackBot.message = [
+        slack_bot.message = [
             {
-                "text": slackBot.location + "에서의 " + slackBot.type_code + " 찾고 계신가요??",
+                "text": slack_bot.location + "에서의 " + slack_bot.type_code + " 찾고 계신가요??",
                 "fallback": "",
                 "callback_id": "select tour",
                 "color": "#3AA3E3",
@@ -127,11 +131,11 @@ def btn_select():
                 ]
             }
         ]
-    slackBot.send_message
+    response = slack_bot.send_message()
 
     print("\n webhook send message : ")
-    print(slackBot.message)
-    return Response()
+    print(slack_bot.message)
+    return Response(), response
 
 
 @app.route('/slack/events', methods=['POST'])
@@ -145,8 +149,8 @@ def events():
 
 @app.route('/slack/oauth', methods=['POST'])
 def oauth():
-    slackBot.code = request.args.get('code')
-    slackBot().oauth()
+    slack_bot.code = request.args.get('code')
+    slack_bot.oauth()
 
     return Response(), 200
 
@@ -155,15 +159,13 @@ def oauth():
 @app.route('/slack/actions', methods=['POST'])
 def interactive_callback():
     payload = json.loads(request.form['payload'])
-    slackBot.channel_id = payload['channel']['id']
+    slack_bot.channel_id = payload['channel']['id']
 
-    if slackBot.channel_id == 'select tour':
-        slackBot.type = payload['actions'][0]['name']
+    if slack_bot.channel_id == 'select tour':
+        slack_bot.type = payload['actions'][0]['name']
         keyword_addr()
     else:
         extra_api(payload['actions'][0]['value'])
-
-
 
 
 # 키워드 추출(검색어 추출)
@@ -188,14 +190,14 @@ def extra_keyword(text):
                 elif str(e[1]) == 'NNG':
                     str_type.append((e[0]))
 
-    slackBot.location = ''.join(str_location)
-    slackBot.type_code = ''.join(str_type)
+    slack_bot.location = ''.join(str_location)
+    slack_bot.type_code = ''.join(str_type)
 
 
 # 주소 정보 타입별로 출력
 def extra_api(location):
-    code_dict = type_info(slackBot.type_code)
-    if slackBot.type == 'location':
+    code_dict = type_info(slack_bot.type_code)
+    if slack_bot.type == 'location':
         code_dict['lng'] = location['frontLon']
         code_dict['lat'] = location['frontLat']
         location_base_api(code_dict)
@@ -213,7 +215,7 @@ def keyword_addr():
         'appKey': '6c8d5711-b0e5-30b1-8aa3-1cdfd328db49',
         'version': '1',
         'format': 'json',
-        'searchKeyword': slackBot.location,
+        'searchKeyword': slack_bot.location,
         'page': '1',
         'count': '5',
     }
@@ -246,30 +248,29 @@ def keyword_addr():
                                 }
                     str_addr = addr['upperAddrName'] + " " + addr['middleAddrName'] + " " + addr['lowerAddrName']
                     btn_message.append(coordinate)
-            slackBot.message = btn_message
+            slack_bot.message = btn_message
 
         elif total_count == 1:
-
             extra_api(result['searchPoiInfo']['pois']['poi'][0])
         else:
-            slackBot.message = [
+            slack_bot.message = [
                 {
-                    'title': '찾으시는 장소가 ' + slackBot.location + '이 맞나요?',
+                    'title': '찾으시는 장소가 ' + slack_bot.location + '이 맞나요?',
                     'text': '상세 장소 정보를 찾지 못했어요. 다시 자세하게 알려주시겠어요? '
                 }
             ]
     else:
-        slackBot.message = [
+        slack_bot.message = [
             {
-                'title': slackBot.location + ' 어디 ' + slackBot.type_code + '를 원하시나요?',
-                'text': slackBot.location + '의 자세한 장소를 알려주세요.'
+                'title': slack_bot.location + ' 어디 ' + slack_bot.type_code + '를 원하시나요?',
+                'text': slack_bot.location + '의 자세한 장소를 알려주세요.'
             }
         ]
-    slackBot.send_message
+    response = slack_bot.send_message()
 
     print("\n keyword arr send message : ")
-    print(slackBot.message)
-    return Response()
+    print(slack_bot.message)
+    return Response(), response
 
 
 # 주소 정보 가져오기
@@ -293,7 +294,7 @@ def area_info(addr):
         if code['name'] in addr['upperAddrName']:
             area_code['area_code'] = code['code']
 
-    if slackBot.location not in addr['upperAddrName']:
+    if slack_bot.location not in addr['upperAddrName']:
         call_api.url = 'http://api.visitkorea.or.kr/openapi/service/rest/KorService/areaCode?ServiceKey=0tGMz%2FY9NJAmuX2b5XBvz2jtdGMVxjmqpEk6dB%2FoX65tTQruqoO6A3Mpk5en%2BbqSaQCIBLWqiXU8vMVDNTdhiA%3D%3D'
         call_api.params = {
             'MobileOS': 'ETC',
@@ -362,20 +363,20 @@ def location_base_api(code_dict):
 
     if result:
         result.update(code_dict)
-        slackBot.message = parsing_api(result, "location")
+        slack_bot.message = parsing_api(result, "location")
     else:
-        slackBot.message = [
+        slack_bot.message = [
             {
-                'title': slackBot.location + ' 어디 ' + slackBot.type_code + '를 원하시나요?',
-                'text': slackBot.location + '의 자세한 장소를 알려주세요.'
+                'title': slack_bot.location + ' 어디 ' + slack_bot.type_code + '를 원하시나요?',
+                'text': slack_bot.location + '의 자세한 장소를 알려주세요.'
             }
         ]
 
-    slackBot.send_message
+    response = slack_bot.send_message()
 
     print("\n location base send message : ")
-    print(slackBot.message)
-    return Response()
+    print(slack_bot.message)
+    return Response(), response
 
 
 # type base api 호출
@@ -401,19 +402,19 @@ def type_base_api(code_dict):
 
     if result:
         result.update(code_dict)
-        slackBot.message = parsing_api(result, "type")
+        slack_bot.message = parsing_api(result, "type")
     else:
-        slackBot.message = [
+        slack_bot.message = [
             {
-                'title': slackBot.location + ' 어디 ' + slackBot.type_code + '를 원하시나요?',
-                'text': slackBot.location + '의 자세한 장소를 알려주세요.'
+                'title': slack_bot.location + ' 어디 ' + slack_bot.type_code + '를 원하시나요?',
+                'text': slack_bot.location + '의 자세한 장소를 알려주세요.'
             }
         ]
-    slackBot.send_message
+    response = slack_bot.send_message()
 
     print("\n type base send message : ")
-    print(slackBot.message)
-    return Response()
+    print(slack_bot.message)
+    return Response(), response
 
 
 # api 결과 파싱
