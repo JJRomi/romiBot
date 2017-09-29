@@ -89,11 +89,10 @@ def btn_select():
     slack_bot.text = request.form.get('text')
     slack_bot.channel_id = request.form.get('channel_id')
 
-    # text로 keyword 추출
-    extra_keyword(slack_bot.text)
-
     # 장소, 타입 정보 있는 지 확인 후 답변
     if slack_bot.text != "":
+        extra_keyword(slack_bot.text)
+
         if slack_bot.location == "":
             slack_bot.message = [
                 {
@@ -160,9 +159,9 @@ def oauth():
 @app.route('/slack/actions', methods=['POST'])
 def interactive_callback():
     payload = json.loads(request.form['payload'])
-    slack_bot.channel_id = payload['channel']['id']
+    callback_id = payload['callback_id']
 
-    if slack_bot.channel_id == 'select tour':
+    if callback_id == 'select tour':
         slack_bot.type = payload['actions'][0]['name']
         keyword_addr()
     else:
