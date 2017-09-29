@@ -136,6 +136,8 @@ def btn_select():
 def events():
     payload = request.get_data()
     data = json.loads(payload)
+    print(payload)
+    print(data)
 
     return Response(data["challenge"], mimetype='application/x-www-form-urlencoded')
 
