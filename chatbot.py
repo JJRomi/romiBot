@@ -19,8 +19,8 @@ class slackBot:
         self.message = {}
         self.user_name = "Romi"
         self.user_emoji = ":monkey_face:"
-        self.verification = SLACK_VERIFICATION_TOKEN
-        self.slack_client = SlackClient(SLACK_BOT_UESR_TOKEN)
+        self.verification = settings.SLACK_VERIFICATION_TOKEN
+        self.slack_client = SlackClient(settings.SLACK_BOT_UESR_TOKEN)
         self.code = ""
         self.type = ""
         self.location = ""
@@ -44,8 +44,8 @@ class slackBot:
     def oauth(self):
         self.slack_client.api_call(
             "oauth.access",
-            client_id=SLACK_CLIENT_ID,
-            client_secret=SLACK_CLIENT_SECRET,
+            client_id=settings.SLACK_CLIENT_ID,
+            client_secret=settings.SLACK_CLIENT_SECRET,
             code=self.code
         )
 
