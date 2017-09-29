@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-import os
 import settings
 
 from flask import Flask, request, Response, make_response, json
@@ -74,7 +73,7 @@ def test():
     extra_keyword(slackBot.text)
     keyword_addr()
 
-    response = slackBot().send_message()
+    response = slackBot.send_message()
 
     return Response(), response
 
