@@ -224,6 +224,7 @@ def keyword_addr():
         'searchKeyword': slack_bot.location,
         'page': '1',
         'count': '5',
+        'resCoordType':'WGS84GEO',
     }
 
     result = call_api.get_send_api()
@@ -333,7 +334,7 @@ def type_info(type_str):
         '_type': 'json'
     }
 
-    result= call_api.get_send_api()
+    result = call_api.get_send_api()
 
     type = {}
     if result:
