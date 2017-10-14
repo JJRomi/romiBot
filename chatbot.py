@@ -131,8 +131,7 @@ def btn_select():
                     ]
                 }
             ]
-        print("webhook send message \n")
-        print(slack_bot.message)
+
         slack_bot.send_message()
 
     return Response()
@@ -277,14 +276,16 @@ def keyword_addr():
 
     print("\n keyword arr send message : ")
     print(slack_bot.message)
+
     return Response(), response
 
 
 # 주소 정보 가져오기
 def area_info(addr):
     call_api = callAPI()
-    call_api.url = "http://api.visitkorea.or.kr/openapi/service/rest/KorService/areaCode?ServiceKey=0tGMz" \
-                   "%2FY9NJAmuX2b5XBvz2jtdGMVxjmqpEk6dB%2FoX65tTQruqoO6A3Mpk5en%2BbqSaQCIBLWqiXU8vMVDNTdhiA%3D%3D& "
+    call_api.url = "http://api.visitkorea.or.kr/openapi/service/rest/KorService/areaCode?ServiceKey=0tGMz%2FY9N" \
+                   "JAmuX2b5XBvz2jtdGMVxjmqpEk6dB%2FoX65tTQruqoO6A3Mpk5en%2BbqSaQCIBLWqiXU8vMVDNTdhiA%3D%3D "
+
     call_api.params = {
         'numOfRows': 40,
         'arrange': 'A',
@@ -292,7 +293,7 @@ def area_info(addr):
         'MobileOS': 'ETC',
         '_type': 'json'
     }
-
+    print("area info : " , addr)
     addr_result = call_api.get_send_api()
     code_arr = addr_result['response']['body']['items']['item']
 
