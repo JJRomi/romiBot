@@ -452,24 +452,37 @@ def parsing_api(api_info, type):
             for item in item_arr:
                 if item['cat1'] == api_info['cat1']:#and item['cat2'] == api_info['cat2'] and item['cat3'] == api_info['cat3']:
 
-                    mapx = str(item['mapx']) if 'mapx' in item.keys() else ''
-                    mapy = str(item['mapy']) if 'mapy' in item.keys() else ''
-
-                    attachments['title'] = " ' " + item['title'] + "' 여기는 어떠신가요??"
-                    attachments['title_link'] = "https://www.google.co.kr/maps/search/"+ item['title'] +"/@" + mapy + "," + mapx + ",18z?hl=ko"
-                    attachments['text'] = item['title'] if 'title' in item.keys() else '여기요!'
-                    attachments['thumb_url'] = item['firstimage'] if 'firstimage' in item.keys() else ''
+                    message = [
+                        {
+                            "title": "'" + item['title'] + "' 여기는 어떠신가요?",
+                            "title_link": "http://ec2-13-125-14-134.ap-northeast-2.compute.amazonaws.com:8000/slack/"+ item['contentid'] + "/",
+                            "text": item['title'] + "은 " + item['addr1'] + " " + item['addr2'] + " 위치에 있습니다.",
+                            "attachment_type": "default",
+                            "thumb_url" : item['firstimage'] if 'firstimage' in item.keys() else ''
+                        }
+                    ]
         else:
-            attachments['title'] = " ' " + item_arr['title'] + "' 여기는 어떠신가요??"
-            attachments['title_link'] = "https://www.google.co.kr/maps/search/" + item_arr['title'] + ",18z?hl=ko"
-            attachments['text'] = item_arr['title'] if 'title' in item_arr.keys() else '여기요!'
-            attachments['thumb_url'] = item_arr['firstimage'] if 'firstimage' in item_arr.keys() else ''
+            message = [
+                {
+                    "title": "'" + item_arr['title'] + "' 여기는 어떠신가요?",
+                    "title_link": "http://ec2-13-125-14-134.ap-northeast-2.compute.amazonaws.com:8000/slack/" + item_arr[
+                        'contentid'] + "/",
+                    "text": item_arr['title'] + "은 " + item_arr['addr1'] + " " + item_arr['addr2'] + " 위치에 있습니다.",
+                    "attachment_type": "default",
+                    "thumb_url": item_arr['firstimage'] if 'firstimage' in item_arr.keys() else ''
+                }
+            ]
     else:
-        attachments['title'] = "정보를 찾지못했어요ㅠㅠ"
-        attachments['title_link'] = "http://www.naver.com"
-        attachments['text'] = "관리자한테 문의해주세요."
+        message = [
+            {
+                "title": "정보를 찾지 못하였습니다. ",
+                "title_link": "http://ec2-13-125-14-134.ap-northeast-2.compute.amazonaws.com:8000/"
+                              "slack/error?location="+ slack_bot.location +"&type=" + slack_bot.type,
+                "text": " 제목을 클릭하여 관리자에게 못찾은 정보를 보내주세요.",
+            }
+        ]
 
-    return attachments
+    return message
 
 
 @app.route('/', methods=['GET'])
