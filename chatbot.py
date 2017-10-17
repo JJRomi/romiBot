@@ -20,10 +20,10 @@ class slackBot:
         self.user_emoji = ":monkey_face:"
         self.verification = settings.SLACK_VERIFICATION_TOKEN
         self.slack_client = SlackClient(settings.SLACK_BOT_UESR_TOKEN)
-        self.code = ""
-        self.type = ""
-        self.location = ""
-        self.type_code = ""
+        self.code = "" # Auth Code
+        self.type = "" # SearchType
+        self.location = "" # location info
+        self.type_code = "" # type info
 
     def send_message(self):
         try:
@@ -83,7 +83,24 @@ def test():
     return Response(), response
 
 
-# button select message (type select)
+@app.route('/slack/events', methods=['POST'])
+def events():
+    payload = request.get_data()
+    data = json.loads(payload)
+    result = data['challenge'] if 'challenge' in data else ''
+
+    return Response(result, mimetype='application/x-www-form-urlencoded')
+
+
+@app.route('/slack/oauth', methods=['POST'])
+def oauth():
+    slack_bot.code = request.args.get('code')
+    slack_bot.oauth()
+
+    return Response(), 200
+
+
+# button select message (search type select)
 @app.route('/webhook', methods=['POST'])
 def btn_select():
     slack_bot.text = request.form.get('text')
@@ -91,6 +108,7 @@ def btn_select():
 
     # 장소, 타입 정보 있는 지 확인 후 답변
     if slack_bot.text != "":
+        # 사용자 키워드 추출하여 location, type_code에 저장
         extra_keyword(slack_bot.text)
 
         if slack_bot.location == "":
@@ -137,37 +155,28 @@ def btn_select():
     return Response()
 
 
-@app.route('/slack/events', methods=['POST'])
-def events():
-    payload = request.get_data()
-    data = json.loads(payload)
-    result = data['challenge'] if 'challenge' in data else ''
-
-    return Response(result, mimetype='application/x-www-form-urlencoded')
-
-
-@app.route('/slack/oauth', methods=['POST'])
-def oauth():
-    slack_bot.code = request.args.get('code')
-    slack_bot.oauth()
-
-    return Response(), 200
-
-
-# button click actions
+# user button click actions
 @app.route('/slack/actions', methods=['POST'])
 def interactive_callback():
     payload = json.loads(request.form['payload'])
     callback_id = payload['callback_id']
 
+    # callback_id select tour : search type click actions
     if callback_id == 'select tour':
         slack_bot.type = payload['actions'][0]['name']
         keyword_addr()
     else:
-        loaction = (payload['actions'][0]['value']).split("/")
-        values = { 'frontLon' : loaction[0],
-                   'frontLat' : loaction[1],
-                 }
+        # location info click actions
+        location = (payload['actions'][0]['value']).split("/")
+        if slack_bot.type == "location":
+            values = { 'frontLon' : location[0],
+                       'frontLat' : location[1],
+                     }
+        else:
+            values = { 'upperAddrName' : location[0],
+                       'middleAddrName' : location[1],
+                     }
+        # search type result request
         extra_api(values)
 
     return Response()
@@ -246,11 +255,17 @@ def keyword_addr():
             str_addr = ""
             for addr in result['searchPoiInfo']['pois']['poi']:
                 if str_addr != addr['upperAddrName'] + " " + addr['middleAddrName'] + " " + addr['lowerAddrName']:
+                    # search type - location info save
+                    if slack_bot.type == "location":
+                        value = addr['frontLon'] + "/" + addr['frontLat']
+                    else:
+                        value = addr['upperAddrName'] + "/" + addr['middleAddrName']
+
                     coordinate = {
                                     "name": addr['id'],
                                     "text": addr['upperAddrName'] + " " + addr['middleAddrName'] + " " + addr['lowerAddrName'],
                                     "type": "button",
-                                    "value": addr['frontLon'] + "/" + addr['frontLat']
+                                    "value": value
                                 }
                     str_addr = addr['upperAddrName'] + " " + addr['middleAddrName'] + " " + addr['lowerAddrName']
                     btn_message[0]['actions'].append(coordinate)
@@ -284,7 +299,7 @@ def keyword_addr():
 def area_info(addr):
     call_api = callAPI()
     call_api.url = "http://api.visitkorea.or.kr/openapi/service/rest/KorService/areaCode?ServiceKey=0tGMz%2FY9N" \
-                   "JAmuX2b5XBvz2jtdGMVxjmqpEk6dB%2FoX65tTQruqoO6A3Mpk5en%2BbqSaQCIBLWqiXU8vMVDNTdhiA%3D%3D "
+                   "JAmuX2b5XBvz2jtdGMVxjmqpEk6dB%2FoX65tTQruqoO6A3Mpk5en%2BbqSaQCIBLWqiXU8vMVDNTdhiA%3D%3D"
 
     call_api.params = {
         'numOfRows': 40,
