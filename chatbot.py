@@ -455,7 +455,7 @@ def parsing_api(api_info, type):
                     message = [
                         {
                             "title": "'" + item['title'] + "' 여기는 어떠신가요?",
-                            "title_link": "http://ec2-13-125-14-134.ap-northeast-2.compute.amazonaws.com:8000/slack/"+ item['contentid'] + "/",
+                            "title_link": "http://ec2-13-125-14-134.ap-northeast-2.compute.amazonaws.com:8000/slack/"+ str(item['contentid']) + "/place",
                             "text": item['title'] + "은 " + item['addr1'] + " " + item['addr2'] + " 위치에 있습니다.",
                             "attachment_type": "default",
                             "thumb_url" : item['firstimage'] if 'firstimage' in item.keys() else ''
@@ -465,8 +465,7 @@ def parsing_api(api_info, type):
             message = [
                 {
                     "title": "'" + item_arr['title'] + "' 여기는 어떠신가요?",
-                    "title_link": "http://ec2-13-125-14-134.ap-northeast-2.compute.amazonaws.com:8000/slack/" + item_arr[
-                        'contentid'] + "/",
+                    "title_link": "http://ec2-13-125-14-134.ap-northeast-2.compute.amazonaws.com:8000/slack/" + str(item_arr['contentid']) + "/place",
                     "text": item_arr['title'] + "은 " + item_arr['addr1'] + " " + item_arr['addr2'] + " 위치에 있습니다.",
                     "attachment_type": "default",
                     "thumb_url": item_arr['firstimage'] if 'firstimage' in item_arr.keys() else ''
