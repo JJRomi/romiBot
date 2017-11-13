@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import settings
 
+
 from flask import Flask, request, Response, make_response, json
 from slackclient import SlackClient
 import requests
@@ -8,8 +9,6 @@ import konlpy
 import nltk
 from konlpy.tag import Mecab
 from flask.ext.restful import Api, Resource, reqparse, fields, marshal
-
-app = Flask(__name__)
 
 class slackBot:
     def __init__(self):
@@ -69,8 +68,7 @@ slack_bot = slackBot()
 
 
 # local test url
-@app.route('/test', methods=['POST'])
-def test():
+def slack_test():
     slack_bot.text = request.form.get('text')
     slack_bot.channel_id = request.form.get('channel_id')
     slack_bot.type = request.form.get('type_code')
@@ -83,8 +81,7 @@ def test():
     return Response(), response
 
 
-@app.route('/slack/events', methods=['POST'])
-def events():
+def slack_events():
     payload = request.get_data()
     data = json.loads(payload)
     result = data['challenge'] if 'challenge' in data else ''
@@ -92,8 +89,7 @@ def events():
     return Response(result, mimetype='application/x-www-form-urlencoded')
 
 
-@app.route('/slack/oauth', methods=['POST'])
-def oauth():
+def slack_oauth():
     slack_bot.code = request.args.get('code')
     slack_bot.oauth()
 
@@ -101,8 +97,7 @@ def oauth():
 
 
 # button select message (search type select)
-@app.route('/webhook', methods=['POST'])
-def btn_select():
+def slack_btn_select():
     slack_bot.text = request.form.get('text')
     slack_bot.channel_id = request.form.get('channel_id')
 
@@ -156,8 +151,7 @@ def btn_select():
 
 
 # user button click actions
-@app.route('/slack/actions', methods=['POST'])
-def interactive_callback():
+def slack_actions():
     payload = json.loads(request.form['payload'])
     callback_id = payload['callback_id']
 
@@ -482,12 +476,3 @@ def parsing_api(api_info, type):
         ]
 
     return message
-
-
-@app.route('/', methods=['GET'])
-def main():
-    return Response('It works!')
-
-
-if __name__ == "__main__":
-    app.run(debug=True)
