@@ -1,0 +1,4 @@
+{
+    "storage": "file",
+    "s3_data_bucket": "crawldata.mydomain.com"
+}

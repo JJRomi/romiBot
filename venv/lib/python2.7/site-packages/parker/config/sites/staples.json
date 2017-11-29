@@ -1,0 +1,40 @@
+{
+    "id": "staples",
+    "class": "supplies",
+    "tags": [
+        "office",
+        "stationary"
+    ],
+    "seconds_until_expire": 259200,
+    "uri_base": "http://www.staples.co.uk/",
+    "uri_start_crawl": "http://www.staples.co.uk/",
+    "crawl_uri_filters": [
+        "staples_soul"
+    ],
+    "consume_selector": "#PageInner .skuPage",
+    "unique_field": "sku",
+    "specific_data": {
+        "title": {
+            "selector": "h1",
+            "regex_filter": "Staples ([a-zA-Z0-9 ]+)"
+        },
+        "sku": {
+            "selector": ".skuDetails .iNumber",
+            "regex_filter": "([a-zA-Z0-9\\-]+)$"
+        },
+        "colour": {
+            "kv_ref": "Colour :"
+        }
+    },
+    "key_value_data": {
+        "key_selector": "#divSpecifications dd .l",
+        "value_selector": "#divSpecifications dd .r"
+    },
+    "crumbs": {
+        "selector": "#skuBreadCrumbs span[itemprop=title]"
+    },
+    "media": {
+        "selector": ".s7Thumbs img",
+        "attribute": "data-zoomimage"
+    }
+}

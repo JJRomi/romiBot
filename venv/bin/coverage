@@ -1,4 +1,4 @@
-#!/Users/jeong/workspace/romi-bot-test/venv/bin/python2.7
+#!/Users/jeong/workspace/romi-bot/venv/bin/python
 
 # -*- coding: utf-8 -*-
 import re

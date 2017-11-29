@@ -257,13 +257,14 @@ class FnmatchMatcher(object):
         # of treating / and \ as equivalent. But on other platforms, we need to
         # take care of that ourselves.
         fnpats = (fnmatch.translate(p) for p in pats)
-        fnpats = (p.replace(r"\/", r"[\\/]") for p in fnpats)
+        # Python3.7 fnmatch translates "/" as "/", before that, it translates as "\/",
+        # so we have to deal with maybe a backslash.
+        fnpats = (re.sub(r"\\?/", r"[\\\\/]", p) for p in fnpats)
+        flags = 0
         if env.WINDOWS:
-            # Windows is also case-insensitive.  BTW: the regex docs say that
-            # flags like (?i) have to be at the beginning, but fnmatch puts
-            # them at the end, and having two there seems to work fine.
-            fnpats = (p + "(?i)" for p in fnpats)
-        self.re = re.compile(join_regex(fnpats))
+            # Windows is also case-insensitive, so make the regex case-insensitive.
+            flags |= re.IGNORECASE
+        self.re = re.compile(join_regex(fnpats), flags=flags)
 
     def __repr__(self):
         return "<FnmatchMatcher %r>" % self.pats
@@ -301,6 +302,11 @@ class PathAliases(object):
     def __init__(self):
         self.aliases = []
 
+    def pprint(self):       # pragma: debugging
+        """Dump the important parts of the PathAliases, for debugging."""
+        for regex, result, _, _ in self.aliases:
+            print("{0!r} --> {1!r}".format(regex.pattern, result))
+
     def add(self, pattern, result):
         """Add the `pattern`/`result` pair to the list of aliases.
 
@@ -314,8 +320,10 @@ class PathAliases(object):
         match an entire tree, and not just its root.
 
         """
+        if len(pattern) > 1:
+            pattern = pattern.rstrip(r"\/")
+
         # The pattern can't end with a wildcard component.
-        pattern = pattern.rstrip(r"\/")
         if pattern.endswith("*"):
             raise CoverageException("Pattern must not end with wildcards.")
         pattern_sep = sep(pattern)
@@ -324,7 +332,8 @@ class PathAliases(object):
         # unless it already is, or is meant to match any prefix.
         if not pattern.startswith('*') and not isabs_anywhere(pattern):
             pattern = abs_file(pattern)
-        pattern += pattern_sep
+        if not pattern.endswith(pattern_sep):
+            pattern += pattern_sep
 
         # Make a regex from the pattern.  fnmatch always adds a \Z to
         # match the whole string, which we don't want, so we remove the \Z.

@@ -7,7 +7,8 @@ import os
 import sys
 
 from coverage import env
-from coverage.backward import iitems
+from coverage.backward import litems, range     # pylint: disable=redefined-builtin
+from coverage.debug import short_stack
 from coverage.files import abs_file
 from coverage.misc import CoverageException, isolate_module
 from coverage.pytracer import PyTracer
@@ -71,8 +72,8 @@ class Collector(object):
     def __init__(self, should_trace, check_include, timid, branch, warn, concurrency):
         """Create a collector.
 
-        `should_trace` is a function, taking a file name, and returning a
-        `coverage.FileDisposition object`.
+        `should_trace` is a function, taking a file name and a frame, and
+        returning a `coverage.FileDisposition object`.
 
         `check_include` is a function taking a file name and a frame. It returns
         a boolean: True if the file should be traced, False if not.
@@ -86,8 +87,9 @@ class Collector(object):
         collecting data on which statements followed each other (arcs).  Use
         `get_arc_data` to get the arc data.
 
-        `warn` is a warning function, taking a single string message argument,
-        to be used if a warning needs to be issued.
+        `warn` is a warning function, taking a single string message argument
+        and an optional slug argument which will be a string or None, to be
+        used if a warning needs to be issued.
 
         `concurrency` is a list of strings indicating the concurrency libraries
         in use.  Valid values are "greenlet", "eventlet", "gevent", or "thread"
@@ -100,6 +102,8 @@ class Collector(object):
         self.warn = warn
         self.branch = branch
         self.threading = None
+
+        self.origin = short_stack()
 
         self.concur_id_func = None
 
@@ -315,6 +319,10 @@ class Collector(object):
     def stop(self):
         """Stop collecting trace information."""
         assert self._collectors
+        if self._collectors[-1] is not self:
+            print("self._collectors:")
+            for c in self._collectors:
+                print("  {!r}\n{}".format(c, c.origin))
         assert self._collectors[-1] is self, (
             "Expected current collector to be %r, but it's %r" % (self, self._collectors[-1])
         )
@@ -374,7 +382,22 @@ class Collector(object):
 
         def abs_file_dict(d):
             """Return a dict like d, but with keys modified by `abs_file`."""
-            return dict((abs_file(k), v) for k, v in iitems(d))
+            # The call to litems() ensures that the GIL protects the dictionary
+            # iterator against concurrent modifications by tracers running
+            # in other threads. We try three times in case of concurrent
+            # access, hoping to get a clean copy.
+            runtime_err = None
+            for _ in range(3):
+                try:
+                    items = litems(d)
+                except RuntimeError as ex:
+                    runtime_err = ex
+                else:
+                    break
+            else:
+                raise runtime_err       # pylint: disable=raising-bad-type
+
+            return dict((abs_file(k), v) for k, v in items)
 
         if self.branch:
             covdata.add_arcs(abs_file_dict(self.data))

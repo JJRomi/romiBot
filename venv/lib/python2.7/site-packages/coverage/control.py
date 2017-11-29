@@ -143,7 +143,8 @@ class Coverage(object):
             config_file=config_file,
             data_file=data_file, cover_pylib=cover_pylib, timid=timid,
             branch=branch, parallel=bool_or_none(data_suffix),
-            source=source, omit=omit, include=include, debug=debug,
+            source=source, run_omit=omit, run_include=include, debug=debug,
+            report_omit=omit, report_include=include,
             concurrency=concurrency,
             )
 
@@ -235,8 +236,8 @@ class Coverage(object):
                 self.source_pkgs.append(src)
         self.source_pkgs_unmatched = self.source_pkgs[:]
 
-        self.omit = prep_patterns(self.config.omit)
-        self.include = prep_patterns(self.config.include)
+        self.omit = prep_patterns(self.config.run_omit)
+        self.include = prep_patterns(self.config.run_include)
 
         concurrency = self.config.concurrency or []
         if "multiprocessing" in concurrency:
@@ -682,6 +683,9 @@ class Coverage(object):
 
         """
         self._init()
+        if self.include:
+            if self.source or self.source_pkgs:
+                self._warn("--include is ignored because --source is set", slug="include-ignored")
         if self.run_suffix:
             # Calling start() means we're running code, so use the run_suffix
             # as the data_suffix when we eventually save the data.
@@ -885,7 +889,7 @@ class Coverage(object):
         # we never measured it. I guess that means it was imported before
         # coverage even started.
         self._warn(
-            "Module %s was previously imported, but not measured." % pkg,
+            "Module %s was previously imported, but not measured" % pkg,
             slug="module-not-measured",
         )
 
@@ -1029,7 +1033,7 @@ class Coverage(object):
         """
         self.get_data()
         self.config.from_args(
-            ignore_errors=ignore_errors, omit=omit, include=include,
+            ignore_errors=ignore_errors, report_omit=omit, report_include=include,
             show_missing=show_missing, skip_covered=skip_covered,
             )
         reporter = SummaryReporter(self, self.config)
@@ -1051,7 +1055,7 @@ class Coverage(object):
         """
         self.get_data()
         self.config.from_args(
-            ignore_errors=ignore_errors, omit=omit, include=include
+            ignore_errors=ignore_errors, report_omit=omit, report_include=include
             )
         reporter = AnnotateReporter(self, self.config)
         reporter.report(morfs, directory=directory)
@@ -1078,7 +1082,7 @@ class Coverage(object):
         """
         self.get_data()
         self.config.from_args(
-            ignore_errors=ignore_errors, omit=omit, include=include,
+            ignore_errors=ignore_errors, report_omit=omit, report_include=include,
             html_dir=directory, extra_css=extra_css, html_title=title,
             skip_covered=skip_covered,
             )
@@ -1103,7 +1107,7 @@ class Coverage(object):
         """
         self.get_data()
         self.config.from_args(
-            ignore_errors=ignore_errors, omit=omit, include=include,
+            ignore_errors=ignore_errors, report_omit=omit, report_include=include,
             xml_output=outfile,
             )
         file_to_close = None

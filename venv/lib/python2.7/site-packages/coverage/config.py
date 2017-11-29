@@ -17,9 +17,18 @@ os = isolate_module(os)
 class HandyConfigParser(configparser.RawConfigParser):
     """Our specialization of ConfigParser."""
 
-    def __init__(self, section_prefix):
+    def __init__(self, our_file):
+        """Create the HandyConfigParser.
+
+        `our_file` is True if this config file is specifically for coverage,
+        False if we are examining another config file (tox.ini, setup.cfg)
+        for possible settings.
+        """
+
         configparser.RawConfigParser.__init__(self)
-        self.section_prefix = section_prefix
+        self.section_prefixes = ["coverage:"]
+        if our_file:
+            self.section_prefixes.append("")
 
     def read(self, filenames):
         """Read a file name as UTF-8 configuration data."""
@@ -29,16 +38,27 @@ class HandyConfigParser(configparser.RawConfigParser):
         return configparser.RawConfigParser.read(self, filenames, **kwargs)
 
     def has_option(self, section, option):
-        section = self.section_prefix + section
-        return configparser.RawConfigParser.has_option(self, section, option)
+        for section_prefix in self.section_prefixes:
+            real_section = section_prefix + section
+            has = configparser.RawConfigParser.has_option(self, real_section, option)
+            if has:
+                return has
+        return False
 
     def has_section(self, section):
-        section = self.section_prefix + section
-        return configparser.RawConfigParser.has_section(self, section)
+        for section_prefix in self.section_prefixes:
+            real_section = section_prefix + section
+            has = configparser.RawConfigParser.has_section(self, real_section)
+            if has:
+                return real_section
+        return False
 
     def options(self, section):
-        section = self.section_prefix + section
-        return configparser.RawConfigParser.options(self, section)
+        for section_prefix in self.section_prefixes:
+            real_section = section_prefix + section
+            if configparser.RawConfigParser.has_section(self, real_section):
+                return configparser.RawConfigParser.options(self, real_section)
+        raise configparser.NoSectionError
 
     def get_section(self, section):
         """Get the contents of a section, as a dictionary."""
@@ -47,7 +67,7 @@ class HandyConfigParser(configparser.RawConfigParser):
             d[opt] = self.get(section, opt)
         return d
 
-    def get(self, section, *args, **kwargs):        # pylint: disable=arguments-differ
+    def get(self, section, option, *args, **kwargs):        # pylint: disable=arguments-differ
         """Get a value, replacing environment variables also.
 
         The arguments are the same as `RawConfigParser.get`, but in the found
@@ -57,8 +77,14 @@ class HandyConfigParser(configparser.RawConfigParser):
         Returns the finished value.
 
         """
-        section = self.section_prefix + section
-        v = configparser.RawConfigParser.get(self, section, *args, **kwargs)
+        for section_prefix in self.section_prefixes:
+            real_section = section_prefix + section
+            if configparser.RawConfigParser.has_option(self, real_section, option):
+                break
+        else:
+            raise configparser.NoOptionError
+
+        v = configparser.RawConfigParser.get(self, real_section, option, *args, **kwargs)
         def dollar_replace(m):
             """Called for each $replacement."""
             # Only one of the groups will have matched, just get its text.
@@ -152,6 +178,10 @@ class CoverageConfig(object):
         self.attempted_config_files = []
         self.config_files = []
 
+        # Defaults for [run] and [report]
+        self._include = None
+        self._omit = None
+
         # Defaults for [run]
         self.branch = False
         self.concurrency = None
@@ -163,14 +193,16 @@ class CoverageConfig(object):
         self.parallel = False
         self.plugins = []
         self.source = None
+        self.run_include = None
+        self.run_omit = None
         self.timid = False
 
         # Defaults for [report]
         self.exclude_list = DEFAULT_EXCLUDE[:]
         self.fail_under = 0
         self.ignore_errors = False
-        self.include = None
-        self.omit = None
+        self.report_include = None
+        self.report_omit = None
         self.partial_always_list = DEFAULT_PARTIAL_ALWAYS[:]
         self.partial_list = DEFAULT_PARTIAL[:]
         self.precision = 0
@@ -192,7 +224,11 @@ class CoverageConfig(object):
         # Options for plugins
         self.plugin_options = {}
 
-    MUST_BE_LIST = ["concurrency", "debug", "disable_warnings", "include", "omit", "plugins"]
+    MUST_BE_LIST = [
+        "debug", "concurrency", "plugins",
+        "report_omit", "report_include",
+        "run_omit", "run_include",
+    ]
 
     def from_args(self, **kwargs):
         """Read config values from `kwargs`."""
@@ -203,10 +239,14 @@ class CoverageConfig(object):
                 setattr(self, k, v)
 
     @contract(filename=str)
-    def from_file(self, filename, section_prefix=""):
+    def from_file(self, filename, our_file):
         """Read configuration from a .rc file.
 
         `filename` is a file name to read.
+
+        `our_file` is True if this config file is specifically for coverage,
+        False if we are examining another config file (tox.ini, setup.cfg)
+        for possible settings.
 
         Returns True or False, whether the file could be read, and it had some
         coverage.py settings in it.
@@ -214,7 +254,7 @@ class CoverageConfig(object):
         """
         self.attempted_config_files.append(filename)
 
-        cp = HandyConfigParser(section_prefix)
+        cp = HandyConfigParser(our_file)
         try:
             files_read = cp.read(filename)
         except configparser.Error as err:
@@ -240,13 +280,12 @@ class CoverageConfig(object):
             all_options[section].add(option)
 
         for section, options in iitems(all_options):
-            if cp.has_section(section):
+            real_section = cp.has_section(section)
+            if real_section:
                 for unknown in set(cp.options(section)) - options:
-                    if section_prefix:
-                        section = section_prefix + section
                     raise CoverageException(
                         "Unrecognized option '[%s] %s=' in config file %s" % (
-                            section, unknown, filename
+                            real_section, unknown, filename
                         )
                     )
 
@@ -262,12 +301,13 @@ class CoverageConfig(object):
                 self.plugin_options[plugin] = cp.get_section(plugin)
                 any_set = True
 
-        # Was this file used as a config file? If no prefix, then it was used.
-        # If a prefix, then it was only used if we found some settings in it.
-        if section_prefix:
-            return any_set
-        else:
+        # Was this file used as a config file? If it's specifically our file,
+        # then it was used.  If we're piggybacking on someone else's file,
+        # then it was only used if we found some settings in it.
+        if our_file:
             return True
+        else:
+            return any_set
 
     CONFIG_FILE_OPTIONS = [
         # These are *args for _set_attr_from_config_option:
@@ -285,9 +325,9 @@ class CoverageConfig(object):
         ('data_file', 'run:data_file'),
         ('debug', 'run:debug', 'list'),
         ('disable_warnings', 'run:disable_warnings', 'list'),
-        ('include', 'run:include', 'list'),
+        ('_include', 'run:include', 'list'),
         ('note', 'run:note'),
-        ('omit', 'run:omit', 'list'),
+        ('_omit', 'run:omit', 'list'),
         ('parallel', 'run:parallel', 'boolean'),
         ('plugins', 'run:plugins', 'list'),
         ('source', 'run:source', 'list'),
@@ -297,8 +337,8 @@ class CoverageConfig(object):
         ('exclude_list', 'report:exclude_lines', 'regexlist'),
         ('fail_under', 'report:fail_under', 'int'),
         ('ignore_errors', 'report:ignore_errors', 'boolean'),
-        ('include', 'report:include', 'list'),
-        ('omit', 'report:omit', 'list'),
+        ('_include', 'report:include', 'list'),
+        ('_omit', 'report:omit', 'list'),
         ('partial_always_list', 'report:partial_branches_always', 'regexlist'),
         ('partial_list', 'report:partial_branches', 'regexlist'),
         ('precision', 'report:precision', 'int'),
@@ -417,10 +457,10 @@ def read_coverage_config(config_file, **kwargs):
         if not specified_file:
             config_file = ".coveragerc"
 
-        for fname, prefix in [(config_file, ""),
-                                ("setup.cfg", "coverage:"),
-                                ("tox.ini", "coverage:")]:
-            config_read = config.from_file(fname, section_prefix=prefix)
+        for fname, our_file in [(config_file, True),
+                                ("setup.cfg", False),
+                                ("tox.ini", False)]:
+            config_read = config.from_file(fname, our_file=our_file)
             is_config_file = fname == config_file
 
             if not config_read and is_config_file and specified_file:
@@ -428,6 +468,12 @@ def read_coverage_config(config_file, **kwargs):
 
             if config_read:
                 break
+
+        for attr in ('_omit', '_include'):
+            value = getattr(config, attr)
+            if value is not None:
+                for section in ('run', 'report'):
+                    setattr(config, section + attr, value)
 
     # 3) from environment variables:
     env_data_file = os.environ.get('COVERAGE_FILE')
@@ -439,5 +485,11 @@ def read_coverage_config(config_file, **kwargs):
 
     # 4) from constructor arguments:
     config.from_args(**kwargs)
+
+    # Once all the config has been collected, there's a little post-processing
+    # to do.
+    config.data_file = os.path.expanduser(config.data_file)
+    config.html_dir = os.path.expanduser(config.html_dir)
+    config.xml_output = os.path.expanduser(config.xml_output)
 
     return config_file, config
