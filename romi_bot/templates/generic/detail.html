@@ -1,0 +1,40 @@
+{% extends "layout.html" %}
+{% block title %}  {{ common.title }} {% endblock title %}
+{% block content %}
+    <style type=text/css>
+        {% if image.originimgurl %}
+            #banner {
+                background-image:url('{{ image.originimgurl }}');
+            }
+        {% endif %}
+    </style>
+
+    <!-- Banner -->
+    <section id="banner">
+        <h2>안녕하세요. {{ name }} 님</h2>
+        <p>관광정보를 알려주는 로미봇입니다. </p>
+        <p>{{ name }}님이 찾으신 {{ common.title }}에 대한 상세 정보 입니다.</p>
+        <!--<ul class="actions">
+            <li>
+                <a href="#" class="button big">Lorem ipsum dolor</a>
+            </li>
+        </ul>-->
+    </section>
+    <!-- Main -->
+    <section id="main" class="wrapper">
+        <div class="container">
+            <header class="major">
+                <h2>{{ common.title }}</h2>
+            </header>
+            {{ common.overview|safe }}
+        </div>
+        {% for item in info %}
+        <div class="container">
+            <header class="major">
+                <h4>{{ item.infoname }}</h4>
+            </header>
+            {{ item.infotext|safe }}
+        </div>
+        {% endfor %}
+    </section>
+{% endblock content %}

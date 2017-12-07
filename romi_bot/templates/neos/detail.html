@@ -1,0 +1,38 @@
+{% extends "auro/layout.html" %}
+{% block title %}  {{ common.title }} {% endblock title %}
+{% block content %}
+	<div id="fh5co-featured-work-section">
+		<div class="container-fluid">
+			<div class="heading-section text-center">
+				<h2>{{ common.title }}</h2>
+			</div>
+			<div class="owl-carousel owl-carousel2">
+                {% for image in images %}
+                    <div class="item">
+                        <!-- <a href="#" class="image-popup"> -->
+                        <img src="{{ image.originimgurl }}" alt="image">
+                        <a href="#" class="pop-up-overlay text-center">
+                            <div class="desc">
+                                <h3>관광정보를 알려주는 로미봇입니다.</h3>
+                                <span>{{ name }}님이 찾으신 {{ common.title }}에 대한 상세 정보 입니다.</span>
+                            </div>
+                        </a>
+                    </div>
+                {% endfor %}
+			</div>
+		</div>
+	</div><!-- end fh5co-featured-work-section -->
+
+	<div class="fh5co-parallax" style="background-image: url(images/hero-2.jpg);" data-stellar-background-ratio="0.5">
+		<div class="overlay"></div>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-8 col-md-offset-2 col-sm-12 col-sm-offset-0 col-xs-12 col-xs-offset-0 text-center fh5co-table">
+					<div class="fh5co-intro fh5co-table-cell">
+						<p>{{ common.overview|safe }}</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div><!-- end: fh5co-parallax -->
+{% endblock content %}
